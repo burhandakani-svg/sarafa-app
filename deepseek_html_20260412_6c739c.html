@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="صيرفة المستقبل">
+<meta name="theme-color" content="#0A0C10">
+<title>صيرفة المستقبل</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<style>
+:root {
+  --gold:#C9A84C; --gold-light:#E8C97A; --gold-dark:#9A7A30;
+  --bg:#0A0C10; --bg2:#111318; --bg3:#181C24; --card:#1A1F2B;
+  --border:rgba(201,168,76,0.2); --text:#F0EAD6; --muted:#8A8E9A;
+  --green:#2ECC71; --red:#E74C3C; --orange:#E67E22; --blue:#3498DB;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;direction:rtl}
+#splash{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s}
+.splash-logo{font-size:64px;margin-bottom:16px}
+.splash-title{font-size:28px;font-weight:700;color:var(--gold);letter-spacing:2px;margin-bottom:8px}
+.splash-sub{font-size:14px;color:var(--muted);margin-bottom:40px}
+.splash-bar{width:160px;height:3px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.splash-fill{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));border-radius:4px;animation:fill 1.8s ease forwards}
+@keyframes fill{from{width:0}to{width:100%}}
+.screen{display:none;min-height:100vh;padding-bottom:40px}
+.screen.active{display:block}
+.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header-logo{font-size:20px;font-weight:700;color:var(--gold)}
+.header-sub{font-size:11px;color:var(--muted)}
+.btn-icon{background:rgba(201,168,76,.15);border:1px solid var(--border);color:var(--gold);padding:8px 12px;border-radius:8px;font-size:13px;cursor:pointer;margin-left:8px}
+.btn-logout{background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);color:var(--red);padding:8px 14px;border-radius:8px;font-size:13px;font-family:'Tajawal',sans-serif;cursor:pointer}
+.lang-bar{display:flex;gap:8px;padding:14px 20px 0;overflow-x:auto;scrollbar-width:none}
+.lang-bar::-webkit-scrollbar{display:none}
+.lang-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:13px;font-family:'Tajawal',sans-serif;cursor:pointer;white-space:nowrap;transition:all .2s}
+.lang-btn.active{background:var(--gold);border-color:var(--gold);color:#000;font-weight:700}
+.login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px}
+.login-logo{font-size:56px;margin-bottom:12px}
+.login-title{font-size:26px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;width:100%;max-width:400px}
+.toggle-row{display:flex;margin-bottom:20px;background:var(--bg3);border-radius:10px;padding:4px}
+.toggle-btn{flex:1;padding:10px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-family:'Tajawal',sans-serif;font-size:14px;cursor:pointer;transition:all .2s}
+.toggle-btn.active{background:var(--gold);color:#000;font-weight:700}
+label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+input,select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:16px;padding:12px 14px;margin-bottom:14px;outline:none;transition:border .2s;direction:ltr}
+input:focus,select:focus{border-color:var(--gold)}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border:none;border-radius:10px;color:#000;font-family:'Tajawal',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;margin-bottom:8px}
+.btn:active{transform:scale(.98);opacity:.9}
+.btn-sm{padding:10px 14px;font-size:14px;width:auto;margin-bottom:0}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+.alert{padding:12px 14px;border-radius:10px;font-size:14px;margin-bottom:14px;display:none}
+.alert.error{background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);color:var(--red)}
+.alert.success{background:rgba(46,204,113,.15);border:1px solid rgba(46,204,113,.3);color:var(--green)}
+.alert.warning{background:rgba(230,126,34,.15);border:1px solid rgba(230,126,34,.3);color:var(--orange)}
+.alert.info{background:rgba(52,152,219,.15);border:1px solid rgba(52,152,219,.3);color:var(--blue)}
+.alert.show{display:block}
+.tabs{display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);background:var(--bg2);padding:0 16px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:14px 18px;border:none;background:transparent;color:var(--muted);font-family:'Tajawal',sans-serif;font-size:14px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.content{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:16px;font-weight:700;color:var(--gold);margin-bottom:16px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.metric{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center}
+.metric.negative{border-color:rgba(231,76,60,.4);background:rgba(231,76,60,.05)}
+.metric.positive{border-color:rgba(46,204,113,.2)}
+.metric-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.metric-value{font-size:15px;font-weight:700;direction:ltr}
+.metric-value.neg{color:var(--red)}
+.metric-value.pos{color:var(--green)}
+.debt-banner{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.customer-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.customer-card.has-debt{border-color:rgba(231,76,60,.4)}
+.cust-name{font-size:16px;font-weight:700;margin-bottom:4px}
+.cust-info{font-size:12px;color:var(--muted);direction:ltr;margin-bottom:10px}
+.cust-balances{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.bal-badge{border-radius:20px;padding:4px 10px;font-size:12px;direction:ltr}
+.bal-badge.pos{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.3);color:var(--green)}
+.bal-badge.neg{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:var(--red)}
+.bal-badge.zero{background:var(--bg3);border:1px solid var(--border);color:var(--muted)}
+.tx-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px}
+.tx-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;margin-top:2px}
+.tx-icon.plus{background:rgba(46,204,113,.15)}
+.tx-icon.minus{background:rgba(231,76,60,.15)}
+.tx-details{flex:1;min-width:0}
+.tx-name{font-size:14px;font-weight:600}
+.tx-note{font-size:12px;color:var(--muted)}
+.tx-date{font-size:10px;color:var(--muted);direction:ltr;margin-top:2px}
+.tx-amount{text-align:left;direction:ltr;font-weight:700;font-size:15px;flex-shrink:0}
+.tx-amount.plus{color:var(--green)}
+.tx-amount.minus{color:var(--red)}
+.rate-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:450px;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:16px}
+.modal-close{float:left;background:var(--bg3);border:none;color:var(--text);width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer}
+.search-wrap{position:relative;margin-bottom:16px}
+.search-wrap input{padding-right:40px;margin-bottom:0}
+.search-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:15px}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.daily-summary{background:linear-gradient(135deg,var(--card),var(--bg3));border:2px solid var(--gold);border-radius:16px;padding:20px;margin-bottom:20px}
+.daily-title{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:16px}
+.daily-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.daily-row:last-child{border-bottom:none}
+.daily-label{color:var(--muted)}
+.daily-value{font-weight:700;direction:ltr}
+.daily-value.profit{color:var(--green)}
+.daily-value.loss{color:var(--red)}
+.daily-date-selector{display:flex;gap:8px;margin-bottom:16px}
+.daily-date-btn{flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer}
+.daily-date-btn.active{background:var(--gold);color:#000;border-color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="splash-logo">🏦</div>
+  <div class="splash-title" id="splash-title">صيرفة المستقبل</div>
+  <div class="splash-sub" id="splash-sub">Sayrafa Al-Mustaqbal</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div id="screen-login" class="screen">
+  <div class="login-wrap">
+    <div class="login-logo">🏦</div>
+    <div class="login-title" id="login-main-title">صيرفة المستقبل</div>
+    <div class="login-sub" id="login-main-sub">نظام إدارة الصرافة المتكامل</div>
+    <div class="lang-bar" style="margin-bottom:20px;padding:0;width:100%;max-width:400px;justify-content:center">
+      <button class="lang-btn active" data-lang="ar" onclick="setLang('ar')">🇸🇦 عربي</button>
+      <button class="lang-btn" data-lang="ku" onclick="setLang('ku')">🏔️ کوردی</button>
+      <button class="lang-btn" data-lang="tr" onclick="setLang('tr')">🇹🇷 Türkçe</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">🇬🇧 English</button>
+    </div>
+    <div class="card">
+      <div class="toggle-row">
+        <button class="toggle-btn active" id="btn-admin-tab" onclick="switchLoginTab('admin')"><span id="txt-admin">👑 المدير</span></button>
+        <button class="toggle-btn" id="btn-cust-tab" onclick="switchLoginTab('customer')"><span id="txt-customer">👤 الزبون</span></button>
+      </div>
+      <div id="alert-login" class="alert error"></div>
+      <div id="login-admin">
+        <label id="lbl-password">كلمة السر</label>
+        <input type="password" id="admin-pass" placeholder="••••••••">
+        <button class="btn" onclick="loginAdmin()" id="btn-login">دخول</button>
+        <button class="btn btn-outline" onclick="showForgotPasswordModal()" style="margin-top:8px" id="btn-forgot">🔑 نسيت كلمة السر؟</button>
+      </div>
+      <div id="login-customer" style="display:none">
+        <label id="lbl-phone">رقم الهاتف</label>
+        <input type="tel" id="cust-phone" placeholder="+964...">
+        <label id="lbl-password2">كلمة السر</label>
+        <input type="password" id="cust-pass" placeholder="••••••••">
+        <button class="btn" onclick="loginCustomer()" id="btn-login2">دخول</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN SCREEN -->
+<div id="screen-admin" class="screen">
+  <div class="header">
+    <div>
+      <div class="header-logo">🏦 <span id="adm-header-title">صيرفة المستقبل</span></div>
+      <div class="header-sub" id="adm-header-sub">لوحة المدير</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-icon" onclick="showAdminProfileModal()" id="btn-profile">👤 الملف الشخصي</button>
+      <button class="btn-icon" onclick="showBackupModal()" id="btn-backup">💾 نسخ</button>
+      <button class="btn-logout" onclick="logout()" id="btn-logout-header">🚪 خروج</button>
+    </div>
+  </div>
+  <div class="lang-bar">
+    <button class="lang-btn active" data-lang="ar" onclick="setLang('ar')">🇸🇦 عربي</button>
+    <button class="lang-btn" data-lang="ku" onclick="setLang('ku')">🏔️ کوردی</button>
+    <button class="lang-btn" data-lang="tr" onclick="setLang('tr')">🇹🇷 Türkçe</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">🇬🇧 English</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('daily')" id="tab-daily">📊 اليومية</button>
+    <button class="tab" onclick="showTab('customers')" id="tab-customers">👥 زبائن</button>
+    <button class="tab" onclick="showTab('txs')" id="tab-txs">💸 حركات</button>
+    <button class="tab" onclick="showTab('debts')" id="tab-debts">🔴 ديون</button>
+    <button class="tab" onclick="showTab('rates')" id="tab-rates">💱 أسعار</button>
+    <button class="tab" onclick="showTab('new-customer')" id="tab-new-customer">➕ جديد</button>
+  </div>
+
+  <!-- PANEL: اليومية (Daily Ledger) -->
+  <div id="panel-daily" class="tab-panel active">
+    <div class="content">
+      <div class="daily-date-selector">
+        <button class="daily-date-btn" onclick="changeDailyDate(-1)" id="btn-yesterday">◀ أمس</button>
+        <button class="daily-date-btn active" onclick="changeDailyDate(0)" id="btn-today">📅 اليوم</button>
+        <button class="daily-date-btn" onclick="changeDailyDate(1)" id="btn-tomorrow">غداً ▶</button>
+      </div>
+      <div id="daily-summary-container"></div>
+      <div class="section-title" style="margin-top:20px" id="daily-txs-title">📋 حركات اليوم</div>
+      <div id="daily-transactions"></div>
+    </div>
+  </div>
+
+  <!-- باقي الـ panels -->
+  <div id="panel-customers" class="tab-panel">
+    <div class="content">
+      <div class="search-wrap">
+        <input type="text" id="search-cust" placeholder="بحث..." oninput="renderCustomers()" style="direction:rtl">
+        <span class="search-icon">🔍</span>
+      </div>
+      <div id="customers-list"></div>
+    </div>
+  </div>
+
+  <div id="panel-txs" class="tab-panel">
+    <div class="content"><div id="all-txs-list"></div></div>
+  </div>
+
+  <div id="panel-debts" class="tab-panel">
+    <div class="content">
+      <div class="section-title" id="debts-title">🔴 الزبائن المدينون</div>
+      <div id="debts-list"></div>
+    </div>
+  </div>
+
+  <div id="panel-rates" class="tab-panel">
+    <div class="content">
+      <div class="section-title" id="rates-title">💱 أسعار الصرف (IQD)</div>
+      <div id="rates-list"></div>
+      <button class="btn" onclick="saveRates()" id="btn-save-rates">💾 حفظ الأسعار</button>
+      <div id="alert-rates" class="alert success" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div id="panel-new-customer" class="tab-panel">
+    <div class="content">
+      <div class="section-title" id="new-cust-title">➕ تسجيل زبون جديد</div>
+      <div id="alert-new" class="alert error"></div>
+      <label id="lbl-fname">الاسم</label><input type="text" id="new-fname" style="direction:rtl">
+      <label id="lbl-lname">اللقب</label><input type="text" id="new-lname" style="direction:rtl">
+      <label id="lbl-tel">رقم الهاتف</label><input type="tel" id="new-tel" placeholder="+964...">
+      <label id="lbl-id">رقم الهوية</label><input type="text" id="new-id">
+      <label id="lbl-newpass">كلمة السر</label><input type="password" id="new-pass" placeholder="••••••••">
+      <button class="btn" onclick="addCustomer()" id="btn-add-cust">✅ تسجيل</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOMER SCREEN -->
+<div id="screen-customer" class="screen">
+  <div class="header">
+    <div>
+      <div class="header-logo">🏦 <span id="cust-header-title">صيرفة المستقبل</span></div>
+      <div class="header-sub" id="cust-welcome">مرحباً</div>
+    </div>
+    <button class="btn-logout" onclick="logout()" id="btn-cust-logout">🚪 خروج</button>
+  </div>
+  <div class="lang-bar">
+    <button class="lang-btn active" data-lang="ar" onclick="setLang('ar')">🇸🇦 عربي</button>
+    <button class="lang-btn" data-lang="ku" onclick="setLang('ku')">🏔️ کوردی</button>
+    <button class="lang-btn" data-lang="tr" onclick="setLang('tr')">🇹🇷 Türkçe</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">🇬🇧 English</button>
+  </div>
+  <div class="content">
+    <div class="section-title" id="cust-balance-title">💰 رصيدي</div>
+    <div class="metrics" id="cust-balances"></div>
+    <div id="cust-debt-banner"></div>
+    <div class="divider" style="height:1px;background:var(--border);margin:16px 0"></div>
+    <div class="section-title" id="cust-history-title">📋 جميع حركاتي</div>
+    <div id="cust-txs"></div>
+    <div class="lock-badge" id="cust-lock-badge" style="background:rgba(201,168,76,.08);border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:16px;text-align:center;color:var(--muted);font-size:13px">
+      🔒 لا يمكنك تعديل الحساب — تواصل مع المدير
+    </div>
+  </div>
+</div>
+
+<!-- TX MODAL -->
+<div class="modal-overlay" id="modal-tx">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title" id="modal-cust-name">معاملة</div>
+    <div class="metrics" id="modal-balances" style="margin-bottom:12px"></div>
+    <div id="modal-debt-warn" class="alert warning"></div>
+    <div class="divider" style="height:1px;background:var(--border);margin:16px 0"></div>
+    <label id="lbl-tx-type">نوع المعاملة</label>
+    <select id="tx-type" onchange="updatePreview()">
+      <option value="deposit" id="opt-deposit">⬆️ الزبون أعطاني (إيداع)</option>
+      <option value="withdraw" id="opt-withdraw">⬇️ أنا أعطيت الزبون (سحب)</option>
+    </select>
+    <label id="lbl-tx-amount">المبلغ</label>
+    <input type="text" id="tx-amount" placeholder="10,000,000" oninput="formatAmountInput(this);updatePreview()">
+    <label id="lbl-tx-currency">العملة</label>
+    <select id="tx-currency" onchange="updatePreview()">
+      <option>USD</option><option>EUR</option><option>TRY</option>
+      <option selected>IQD</option><option>GBP</option><option>SAR</option>
+    </select>
+    <div class="preview-box" id="tx-preview" style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;display:none">
+      <div class="preview-row" style="display:flex;justify-content:space-between;padding:4px 0">
+        <span style="color:var(--muted)" id="prev-cur-label">الرصيد الحالي</span>
+        <span id="prev-cur-val" style="font-weight:700;direction:ltr">—</span>
+      </div>
+      <div class="preview-row" style="display:flex;justify-content:space-between;padding:4px 0">
+        <span style="color:var(--muted)" id="prev-after-label">بعد المعاملة</span>
+        <span id="prev-after-val" style="font-weight:700;direction:ltr">—</span>
+      </div>
+      <div id="prev-debt-row" style="display:none;justify-content:space-between;padding:4px 0">
+        <span style="color:var(--red)" id="prev-debt-label">⚠️ سيكون مديوناً</span>
+        <span id="prev-debt-val" style="color:var(--red);font-weight:700;direction:ltr">—</span>
+      </div>
+    </div>
+    <label id="lbl-tx-note" style="margin-top:4px">ملاحظة</label>
+    <input type="text" id="tx-note" style="direction:rtl" placeholder="اختياري">
+    <div id="alert-tx" class="alert error"></div>
+    <button class="btn" onclick="confirmTx()" id="btn-confirm-tx">✅ تأكيد</button>
+  </div>
+</div>
+
+<!-- ADMIN PROFILE MODAL -->
+<div class="modal-overlay" id="modal-admin-profile">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAdminProfileModal()">×</button>
+    <div class="modal-title" id="profile-title">👤 إعدادات الآدمين</div>
+    <div id="alert-profile" class="alert success"></div>
+    <label id="lbl-email">البريد الإلكتروني للاسترداد</label>
+    <input type="email" id="admin-email" placeholder="admin@example.com" dir="ltr">
+    <label id="lbl-current-pass">كلمة السر الحالية</label>
+    <input type="password" id="current-password" placeholder="••••••••">
+    <label id="lbl-new-pass">كلمة السر الجديدة</label>
+    <input type="password" id="new-password" placeholder="••••••••">
+    <label id="lbl-confirm-pass">تأكيد كلمة السر الجديدة</label>
+    <input type="password" id="confirm-password" placeholder="••••••••">
+    <button class="btn" onclick="updateAdminProfile()" id="btn-save-profile">💾 حفظ التغييرات</button>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal-overlay" id="modal-forgot-password">
+  <div class="modal">
+    <button class="modal-close" onclick="closeForgotPasswordModal()">×</button>
+    <div class="modal-title" id="forgot-title">🔑 استرجاع كلمة السر</div>
+    <div id="alert-forgot" class="alert info"></div>
+    <label id="lbl-recovery-email">البريد الإلكتروني المسجل</label>
+    <input type="email" id="recovery-email" placeholder="admin@example.com" dir="ltr">
+    <button class="btn" onclick="sendRecoveryCode()" id="btn-send-code">📧 إرسال رمز الاسترداد</button>
+    <div class="divider" style="height:1px;background:var(--border);margin:16px 0"></div>
+    <label id="lbl-verify-code">رمز التحقق</label>
+    <input type="text" id="recovery-code" placeholder="000000">
+    <label id="lbl-new-pass-recovery">كلمة السر الجديدة</label>
+    <input type="password" id="recovery-new-password" placeholder="••••••••">
+    <button class="btn" onclick="resetAdminPassword()" id="btn-reset-pass">✅ إعادة تعيين كلمة السر</button>
+  </div>
+</div>
+
+<!-- RESET CUSTOMER PASSWORD MODAL -->
+<div class="modal-overlay" id="modal-reset-cust-password">
+  <div class="modal">
+    <button class="modal-close" onclick="closeResetCustPasswordModal()">×</button>
+    <div class="modal-title" id="reset-cust-title">🔑 إعادة تعيين كلمة سر الزبون</div>
+    <div id="alert-reset-cust" class="alert success"></div>
+    <p style="margin-bottom:16px;color:var(--muted)"><span id="reset-cust-label">الزبون:</span> <span id="reset-cust-name" style="color:var(--text);font-weight:700"></span></p>
+    <label id="lbl-new-cust-pass">كلمة السر الجديدة</label>
+    <input type="password" id="new-cust-password" placeholder="••••••••">
+    <label id="lbl-confirm-cust-pass">تأكيد كلمة السر</label>
+    <input type="password" id="confirm-cust-password" placeholder="••••••••">
+    <button class="btn" onclick="resetCustomerPassword()" id="btn-reset-cust-pass">✅ تعيين كلمة السر الجديدة</button>
+  </div>
+</div>
+
+<script>
+const ENCRYPTION_KEY = "SayrafaSecureKey2024!@#";
+const STORE = 'sarafa_secure_v3';
+const ADMIN_HASH = CryptoJS.SHA256('admin123').toString();
+
+let DB, currentUser = null, currentRole = null, selectedPhone = null;
+let selectedDailyDate = new Date().toISOString().split('T')[0];
+let recoveryCode = null;
+let lang = 'ar';
+
+// ==================== MULTI-LANGUAGE SYSTEM ====================
+const L = {
+  ar: {
+    splashTitle: 'صيرفة المستقبل', splashSub: 'Sayrafa Al-Mustaqbal',
+    loginMainTitle: 'صيرفة المستقبل', loginMainSub: 'نظام إدارة الصرافة المتكامل',
+    admin: '👑 المدير', customer: '👤 الزبون', password: 'كلمة السر', phone: 'رقم الهاتف',
+    login: 'دخول', forgotPass: '🔑 نسيت كلمة السر؟', wrongPass: '❌ كلمة السر خاطئة!',
+    notFound: '❌ الزبون غير موجود!', panel: 'لوحة المدير', profile: '👤 الملف الشخصي',
+    backup: '💾 نسخ', logout: '🚪 خروج',
+    daily: '📊 اليومية', customers: '👥 زبائن', txs: '💸 حركات', debts: '🔴 ديون',
+    rates: '💱 أسعار', newCust: '➕ جديد',
+    yesterday: '◀ أمس', today: '📅 اليوم', tomorrow: 'غداً ▶',
+    dailyTxs: '📋 حركات اليوم', search: 'بحث...', noCusts: 'لا يوجد زبائن',
+    doTx: '💸 معاملة', changePass: '🔑 تغيير الرمز', indebted: '● مديون',
+    debtsTitle: '🔴 الزبائن المدينون', noDebts: '✅ لا يوجد زبائن مدينون',
+    owes: 'مديون', ratesTitle: '💱 أسعار الصرف (IQD)',
+    saveRates: '💾 حفظ الأسعار', ratesSaved: '✅ تم حفظ الأسعار!',
+    newCustTitle: '➕ تسجيل زبون جديد', fname: 'الاسم', lname: 'اللقب',
+    tel: 'رقم الهاتف', idNo: 'رقم الهوية', newPass: 'كلمة السر',
+    register: '✅ تسجيل', fillAll: '⚠️ أكمل جميع الحقول!',
+    phoneExists: '⚠️ الهاتف مسجل مسبقاً!', registered: '✅ تم التسجيل!',
+    balance: '💰 رصيدي', history: '📋 جميع حركاتي',
+    lockMsg: '🔒 لا يمكنك تعديل الحساب — تواصل مع المدير',
+    txType: 'نوع المعاملة', deposit: '⬆️ الزبون أعطاني (إيداع)',
+    withdraw: '⬇️ أنا أعطيت الزبون (سحب)', amount: 'المبلغ', currency: 'العملة',
+    note: 'ملاحظة', confirm: '✅ تأكيد', txDone: '✅ تمت المعاملة!',
+    curBalance: 'الرصيد الحالي', afterTx: 'بعد المعاملة', willOwe: '⚠️ سيكون مديوناً',
+    debtWarn: '⚠️ هذا الزبون عنده دين — المعاملة ستُضاف لسجله الدائم',
+    openingBalance: '🏦 الرصيد الافتتاحي', currentBalance: '💰 الرصيد الحالي',
+    netProfit: '📈 صافي الربح', netLoss: '📉 صافي الخسارة',
+    noTxs: 'لا توجد حركات بعد', noDailyTxs: 'لا توجد حركات في هذا التاريخ',
+    profileTitle: '👤 إعدادات الآدمين', email: 'البريد الإلكتروني للاسترداد',
+    currentPass: 'كلمة السر الحالية', newPassword: 'كلمة السر الجديدة',
+    confirmPass: 'تأكيد كلمة السر الجديدة', saveChanges: '💾 حفظ التغييرات',
+    forgotTitle: '🔑 استرجاع كلمة السر', recoveryEmail: 'البريد الإلكتروني المسجل',
+    sendCode: '📧 إرسال رمز الاسترداد', verifyCode: 'رمز التحقق',
+    resetPass: '✅ إعادة تعيين كلمة السر', resetCustTitle: '🔑 إعادة تعيين كلمة سر الزبون',
+    customerLabel: 'الزبون:', setNewPass: '✅ تعيين كلمة السر الجديدة',
+    welcome: 'مرحباً', noTxsYet: 'لا توجد حركات بعد',
+    invalidAmount: '⚠️ أدخل مبلغ صحيح', saveSuccess: '✅ تم حفظ التغييرات بنجاح',
+    passMismatch: '❌ كلمة السر غير متطابقة', passLength: '❌ كلمة السر يجب أن تكون 6 أحرف على الأقل',
+    noEmail: '❌ لم يتم تسجيل بريد إلكتروني للآدمين', emailMismatch: '❌ البريد الإلكتروني غير مطابق للمسجل',
+    codeSent: '📧 رمز الاسترداد: ', invalidCode: '❌ رمز التحقق غير صحيح',
+    passChanged: '✅ تم تغيير كلمة السر بنجاح'
+  },
+  ku: {
+    splashTitle: 'صرافة ئایندە', splashSub: 'Sayrafa Al-Mustaqbal',
+    loginMainTitle: 'صرافة ئایندە', loginMainSub: 'سیستەمی بەڕێوەبردنی دراو',
+    admin: '👑 بەڕێوەبەر', customer: '👤 کڕیار', password: 'تێپەڕەوشە', phone: 'ژمارەی تەلەفۆن',
+    login: 'چوونەژوورەوە', forgotPass: '🔑 تێپەڕەوشەت بیرچووە؟', wrongPass: '❌ تێپەڕەوشە هەڵەیە!',
+    notFound: '❌ کڕیار نەدۆزرایەوە!', panel: 'پانێلی بەڕێوەبەر', profile: '👤 پڕۆفایل',
+    backup: '💾 پاشەکەوت', logout: '🚪 چوونەدەرەوە',
+    daily: '📊 ڕۆژانە', customers: '👥 کڕیارەکان', txs: '💸 جووڵەکان', debts: '🔴 قەرزەکان',
+    rates: '💱 نرخەکان', newCust: '➕ نوێ',
+    yesterday: '◀ دوێنێ', today: '📅 ئەمڕۆ', tomorrow: 'سبەینێ ▶',
+    dailyTxs: '📋 جووڵەکانی ئەمڕۆ', search: 'گەڕان...', noCusts: 'هێشتا کڕیارێک نییە',
+    doTx: '💸 مامەڵە', changePass: '🔑 گۆڕینی تێپەڕەوشە', indebted: '● قەرزدار',
+    debtsTitle: '🔴 کڕیارە قەرزدارەکان', noDebts: '✅ قەرزدارێک نییە',
+    owes: 'قەرزدار', ratesTitle: '💱 نرخی دراو (IQD)',
+    saveRates: '💾 پاشەکەوتکردنی نرخەکان', ratesSaved: '✅ نرخەکان پاشەکەوتکران!',
+    newCustTitle: '➕ تۆمارکردنی کڕیاری نوێ', fname: 'ناو', lname: 'باوکی ناو',
+    tel: 'تەلەفۆن', idNo: 'ژمارەی نەتەوەیی', newPass: 'تێپەڕەوشە',
+    register: '✅ تۆمارکردن', fillAll: '⚠️ هەموو خانەکان پڕبکەرەوە!',
+    phoneExists: '⚠️ تەلەفۆن پێشتر تۆمارکراوە!', registered: '✅ تۆمارکرا!',
+    balance: '💰 باڵانسەکەم', history: '📋 هەموو جووڵەکانم',
+    lockMsg: '🔒 ناتوانی گۆڕانکاری بکەی — پەیوەندی بە بەڕێوەبەرەوە بکە',
+    txType: 'جۆری مامەڵە', deposit: '⬆️ واردکردن',
+    withdraw: '⬇️ دەرکردن', amount: 'بڕ', currency: 'دراو',
+    note: 'تێبینی', confirm: '✅ پشتڕاستکردنەوە', txDone: '✅ مامەڵە تەواوبوو!',
+    curBalance: 'باڵانسی ئێستا', afterTx: 'دوای مامەڵە', willOwe: '⚠️ قەرزدار دەبێت',
+    debtWarn: '⚠️ ئەم کڕیارە قەرزی هەیە — مامەڵەکە بۆ مێژووی دائیمی زیادکرا',
+    openingBalance: '🏦 باڵانسی کردنەوە', currentBalance: '💰 باڵانسی ئێستا',
+    netProfit: '📈 قازانج', netLoss: '📉 زیان',
+    noTxs: 'هێشتا جووڵەیەک نییە', noDailyTxs: 'هیچ جووڵەیەک لەم ڕێکەوتەدا نییە',
+    profileTitle: '👤 ڕێکخستنەکانی بەڕێوەبەر', email: 'ئیمەیڵی گەڕاندنەوە',
+    currentPass: 'تێپەڕەوشەی ئێستا', newPassword: 'تێپەڕەوشەی نوێ',
+    confirmPass: 'دووپاتکردنەوەی تێپەڕەوشە', saveChanges: '💾 پاشەکەوتکردنی گۆڕانکارییەکان',
+    forgotTitle: '🔑 گەڕاندنەوەی تێپەڕەوشە', recoveryEmail: 'ئیمەیڵی تۆمارکراو',
+    sendCode: '📧 ناردنی کۆدی گەڕاندنەوە', verifyCode: 'کۆدی پشتڕاستکردنەوە',
+    resetPass: '✅ ڕێکخستنەوەی تێپەڕەوشە', resetCustTitle: '🔑 ڕێکخستنەوەی تێپەڕەوشەی کڕیار',
+    customerLabel: 'کڕیار:', setNewPass: '✅ دانانی تێپەڕەوشەی نوێ',
+    welcome: 'بەخێربێیت', noTxsYet: 'هێشتا جووڵەیەک نییە',
+    invalidAmount: '⚠️ بڕێکی دروست بنووسە', saveSuccess: '✅ گۆڕانکارییەکان بەسەرکەوتوویی پاشەکەوتکران',
+    passMismatch: '❌ تێپەڕەوشەکان یەک ناگرنەوە', passLength: '❌ تێپەڕەوشە دەبێت لانیکەم ٦ پیت بێت',
+    noEmail: '❌ هیچ ئیمەیڵێک بۆ بەڕێوەبەر تۆمارنەکراوە', emailMismatch: '❌ ئیمەیڵەکە ناگونجێت',
+    codeSent: '📧 کۆدی گەڕاندنەوە: ', invalidCode: '❌ کۆدی پشتڕاستکردنەوە هەڵەیە',
+    passChanged: '✅ تێپەڕەوشە بەسەرکەوتوویی گۆڕدرا'
+  },
+  tr: {
+    splashTitle: 'Sarraf El-Mustakbal', splashSub: 'Sarraf El-Mustakbal',
+    loginMainTitle: 'Sarraf El-Mustakbal', loginMainSub: 'Döviz Bürosu Yönetim Sistemi',
+    admin: '👑 Admin', customer: '👤 Müşteri', password: 'Şifre', phone: 'Telefon',
+    login: 'Giriş', forgotPass: '🔑 Şifremi Unuttum?', wrongPass: '❌ Yanlış şifre!',
+    notFound: '❌ Müşteri bulunamadı!', panel: 'Admin Paneli', profile: '👤 Profil',
+    backup: '💾 Yedek', logout: '🚪 Çıkış',
+    daily: '📊 Günlük', customers: '👥 Müşteriler', txs: '💸 İşlemler', debts: '🔴 Borçlar',
+    rates: '💱 Kurlar', newCust: '➕ Yeni',
+    yesterday: '◀ Dün', today: '📅 Bugün', tomorrow: 'Yarın ▶',
+    dailyTxs: '📋 Bugünkü İşlemler', search: 'Ara...', noCusts: 'Henüz müşteri yok',
+    doTx: '💸 İşlem', changePass: '🔑 Şifre Değiştir', indebted: '● Borçlu',
+    debtsTitle: '🔴 Borçlu Müşteriler', noDebts: '✅ Borçlu müşteri yok',
+    owes: 'Borç', ratesTitle: '💱 Döviz Kurları (IQD)',
+    saveRates: '💾 Kaydet', ratesSaved: '✅ Kaydedildi!',
+    newCustTitle: '➕ Yeni Müşteri Kaydı', fname: 'Ad', lname: 'Soyad',
+    tel: 'Telefon', idNo: 'Kimlik No', newPass: 'Şifre',
+    register: '✅ Kaydet', fillAll: '⚠️ Tüm alanları doldurun!',
+    phoneExists: '⚠️ Telefon zaten kayıtlı!', registered: '✅ Kayıt tamamlandı!',
+    balance: '💰 Bakiyem', history: '📋 Tüm Hareketlerim',
+    lockMsg: '🔒 Hesabınızda değişiklik yapamazsınız — Yöneticiyle iletişime geçin',
+    txType: 'İşlem Türü', deposit: '⬆️ Müşteri Para Yatırdı',
+    withdraw: '⬇️ Müşteriye Para Verildi', amount: 'Miktar', currency: 'Para Birimi',
+    note: 'Açıklama', confirm: '✅ Onayla', txDone: '✅ İşlem tamamlandı!',
+    curBalance: 'Mevcut bakiye', afterTx: 'İşlem sonrası', willOwe: '⚠️ Borçlu olacak',
+    debtWarn: '⚠️ Bu müşterinin borcu var — kalıcı geçmişe eklenecek',
+    openingBalance: '🏦 Açılış Bakiyesi', currentBalance: '💰 Güncel Bakiye',
+    netProfit: '📈 Net Kâr', netLoss: '📉 Net Zarar',
+    noTxs: 'Henüz işlem yok', noDailyTxs: 'Bu tarihte işlem yok',
+    profileTitle: '👤 Admin Ayarları', email: 'Kurtarma E-postası',
+    currentPass: 'Mevcut Şifre', newPassword: 'Yeni Şifre',
+    confirmPass: 'Yeni Şifreyi Onayla', saveChanges: '💾 Değişiklikleri Kaydet',
+    forgotTitle: '🔑 Şifre Kurtarma', recoveryEmail: 'Kayıtlı E-posta',
+    sendCode: '📧 Kurtarma Kodu Gönder', verifyCode: 'Doğrulama Kodu',
+    resetPass: '✅ Şifreyi Sıfırla', resetCustTitle: '🔑 Müşteri Şifresini Sıfırla',
+    customerLabel: 'Müşteri:', setNewPass: '✅ Yeni Şifreyi Ayarla',
+    welcome: 'Hoş geldin', noTxsYet: 'Henüz işlem yok',
+    invalidAmount: '⚠️ Geçerli bir miktar girin', saveSuccess: '✅ Değişiklikler başarıyla kaydedildi',
+    passMismatch: '❌ Şifreler eşleşmiyor', passLength: '❌ Şifre en az 6 karakter olmalıdır',
+    noEmail: '❌ Admin için kayıtlı e-posta yok', emailMismatch: '❌ E-posta eşleşmiyor',
+    codeSent: '📧 Kurtarma kodu: ', invalidCode: '❌ Geçersiz doğrulama kodu',
+    passChanged: '✅ Şifre başarıyla değiştirildi'
+  },
+  en: {
+    splashTitle: 'Sayrafa Al-Mustaqbal', splashSub: 'Sayrafa Al-Mustaqbal',
+    loginMainTitle: 'Sayrafa Al-Mustaqbal', loginMainSub: 'Currency Exchange Management System',
+    admin: '👑 Admin', customer: '👤 Customer', password: 'Password', phone: 'Phone Number',
+    login: 'Login', forgotPass: '🔑 Forgot Password?', wrongPass: '❌ Wrong password!',
+    notFound: '❌ Customer not found!', panel: 'Admin Panel', profile: '👤 Profile',
+    backup: '💾 Backup', logout: '🚪 Logout',
+    daily: '📊 Daily', customers: '👥 Customers', txs: '💸 Transactions', debts: '🔴 Debts',
+    rates: '💱 Rates', newCust: '➕ New',
+    yesterday: '◀ Yesterday', today: '📅 Today', tomorrow: 'Tomorrow ▶',
+    dailyTxs: '📋 Today\'s Transactions', search: 'Search...', noCusts: 'No customers yet',
+    doTx: '💸 Transaction', changePass: '🔑 Change Password', indebted: '● Indebted',
+    debtsTitle: '🔴 Indebted Customers', noDebts: '✅ No customers in debt',
+    owes: 'Owes', ratesTitle: '💱 Exchange Rates (IQD)',
+    saveRates: '💾 Save Rates', ratesSaved: '✅ Rates saved!',
+    newCustTitle: '➕ Register New Customer', fname: 'First Name', lname: 'Last Name',
+    tel: 'Phone', idNo: 'ID Number', newPass: 'Password',
+    register: '✅ Register', fillAll: '⚠️ Fill all fields!',
+    phoneExists: '⚠️ Phone already registered!', registered: '✅ Registered!',
+    balance: '💰 My Balance', history: '📋 All My Transactions',
+    lockMsg: '🔒 You cannot modify your account — Contact admin',
+    txType: 'Transaction Type', deposit: '⬆️ Customer gave me (Deposit)',
+    withdraw: '⬇️ I gave customer (Withdrawal)', amount: 'Amount', currency: 'Currency',
+    note: 'Note', confirm: '✅ Confirm', txDone: '✅ Transaction complete!',
+    curBalance: 'Current balance', afterTx: 'After transaction', willOwe: '⚠️ Will be in debt',
+    debtWarn: '⚠️ This customer has debt — will be added to permanent history',
+    openingBalance: '🏦 Opening Balance', currentBalance: '💰 Current Balance',
+    netProfit: '📈 Net Profit', netLoss: '📉 Net Loss',
+    noTxs: 'No transactions yet', noDailyTxs: 'No transactions on this date',
+    profileTitle: '👤 Admin Settings', email: 'Recovery Email',
+    currentPass: 'Current Password', newPassword: 'New Password',
+    confirmPass: 'Confirm New Password', saveChanges: '💾 Save Changes',
+    forgotTitle: '🔑 Password Recovery', recoveryEmail: 'Registered Email',
+    sendCode: '📧 Send Recovery Code', verifyCode: 'Verification Code',
+    resetPass: '✅ Reset Password', resetCustTitle: '🔑 Reset Customer Password',
+    customerLabel: 'Customer:', setNewPass: '✅ Set New Password',
+    welcome: 'Welcome', noTxsYet: 'No transactions yet',
+    invalidAmount: '⚠️ Enter a valid amount', saveSuccess: '✅ Changes saved successfully',
+    passMismatch: '❌ Passwords do not match', passLength: '❌ Password must be at least 6 characters',
+    noEmail: '❌ No email registered for admin', emailMismatch: '❌ Email does not match',
+    codeSent: '📧 Recovery code: ', invalidCode: '❌ Invalid verification code',
+    passChanged: '✅ Password changed successfully'
+  }
+};
+
+function t(key) { return L[lang][key] || key; }
+function el(id) { return document.getElementById(id); }
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === l);
+  });
+  document.body.style.direction = (l === 'ar' || l === 'ku') ? 'rtl' : 'ltr';
+  updateAllTexts();
+  if (currentRole === 'admin') renderAdminView();
+  if (currentRole === 'customer') renderCustomerView();
+}
+
+function updateAllTexts() {
+  // Splash
+  el('splash-title').textContent = t('splashTitle');
+  el('splash-sub').textContent = t('splashSub');
+  
+  // Login
+  el('login-main-title').textContent = t('loginMainTitle');
+  el('login-main-sub').textContent = t('loginMainSub');
+  el('txt-admin').textContent = t('admin');
+  el('txt-customer').textContent = t('customer');
+  el('lbl-password').textContent = t('password');
+  el('btn-login').textContent = t('login');
+  el('btn-forgot').textContent = t('forgotPass');
+  el('lbl-phone').textContent = t('phone');
+  el('lbl-password2').textContent = t('password');
+  el('btn-login2').textContent = t('login');
+  
+  // Admin header
+  if (el('adm-header-title')) el('adm-header-title').textContent = t('splashTitle');
+  if (el('adm-header-sub')) el('adm-header-sub').textContent = t('panel');
+  if (el('btn-profile')) el('btn-profile').innerHTML = t('profile');
+  if (el('btn-backup')) el('btn-backup').innerHTML = t('backup');
+  if (el('btn-logout-header')) el('btn-logout-header').innerHTML = t('logout');
+  
+  // Tabs
+  if (el('tab-daily')) el('tab-daily').textContent = t('daily');
+  if (el('tab-customers')) el('tab-customers').textContent = t('customers');
+  if (el('tab-txs')) el('tab-txs').textContent = t('txs');
+  if (el('tab-debts')) el('tab-debts').textContent = t('debts');
+  if (el('tab-rates')) el('tab-rates').textContent = t('rates');
+  if (el('tab-new-customer')) el('tab-new-customer').textContent = t('newCust');
+  
+  // Daily panel
+  if (el('btn-yesterday')) el('btn-yesterday').textContent = t('yesterday');
+  if (el('btn-today')) el('btn-today').textContent = t('today');
+  if (el('btn-tomorrow')) el('btn-tomorrow').textContent = t('tomorrow');
+  if (el('daily-txs-title')) el('daily-txs-title').textContent = t('dailyTxs');
+  
+  // Customers
+  if (el('search-cust')) el('search-cust').placeholder = t('search');
+  
+  // Debts
+  if (el('debts-title')) el('debts-title').textContent = t('debtsTitle');
+  
+  // Rates
+  if (el('rates-title')) el('rates-title').textContent = t('ratesTitle');
+  if (el('btn-save-rates')) el('btn-save-rates').textContent = t('saveRates');
+  
+  // New Customer
+  if (el('new-cust-title')) el('new-cust-title').textContent = t('newCustTitle');
+  if (el('lbl-fname')) el('lbl-fname').textContent = t('fname');
+  if (el('lbl-lname')) el('lbl-lname').textContent = t('lname');
+  if (el('lbl-tel')) el('lbl-tel').textContent = t('tel');
+  if (el('lbl-id')) el('lbl-id').textContent = t('idNo');
+  if (el('lbl-newpass')) el('lbl-newpass').textContent = t('newPass');
+  if (el('btn-add-cust')) el('btn-add-cust').textContent = t('register');
+  
+  // Customer screen
+  if (el('cust-header-title')) el('cust-header-title').textContent = t('splashTitle');
+  if (el('btn-cust-logout')) el('btn-cust-logout').innerHTML = t('logout');
+  if (el('cust-balance-title')) el('cust-balance-title').textContent = t('balance');
+  if (el('cust-history-title')) el('cust-history-title').textContent = t('history');
+  if (el('cust-lock-badge')) el('cust-lock-badge').textContent = t('lockMsg');
+  
+  // TX Modal
+  if (el('lbl-tx-type')) el('lbl-tx-type').textContent = t('txType');
+  if (el('opt-deposit')) el('opt-deposit').textContent = t('deposit');
+  if (el('opt-withdraw')) el('opt-withdraw').textContent = t('withdraw');
+  if (el('lbl-tx-amount')) el('lbl-tx-amount').textContent = t('amount');
+  if (el('lbl-tx-currency')) el('lbl-tx-currency').textContent = t('currency');
+  if (el('prev-cur-label')) el('prev-cur-label').textContent = t('curBalance');
+  if (el('prev-after-label')) el('prev-after-label').textContent = t('afterTx');
+  if (el('prev-debt-label')) el('prev-debt-label').textContent = t('willOwe');
+  if (el('lbl-tx-note')) el('lbl-tx-note').textContent = t('note');
+  if (el('btn-confirm-tx')) el('btn-confirm-tx').textContent = t('confirm');
+  
+  // Profile Modal
+  if (el('profile-title')) el('profile-title').textContent = t('profileTitle');
+  if (el('lbl-email')) el('lbl-email').textContent = t('email');
+  if (el('lbl-current-pass')) el('lbl-current-pass').textContent = t('currentPass');
+  if (el('lbl-new-pass')) el('lbl-new-pass').textContent = t('newPassword');
+  if (el('lbl-confirm-pass')) el('lbl-confirm-pass').textContent = t('confirmPass');
+  if (el('btn-save-profile')) el('btn-save-profile').textContent = t('saveChanges');
+  
+  // Forgot Modal
+  if (el('forgot-title')) el('forgot-title').textContent = t('forgotTitle');
+  if (el('lbl-recovery-email')) el('lbl-recovery-email').textContent = t('recoveryEmail');
+  if (el('btn-send-code')) el('btn-send-code').textContent = t('sendCode');
+  if (el('lbl-verify-code')) el('lbl-verify-code').textContent = t('verifyCode');
+  if (el('lbl-new-pass-recovery')) el('lbl-new-pass-recovery').textContent = t('newPassword');
+  if (el('btn-reset-pass')) el('btn-reset-pass').textContent = t('resetPass');
+  
+  // Reset Customer Modal
+  if (el('reset-cust-title')) el('reset-cust-title').textContent = t('resetCustTitle');
+  if (el('reset-cust-label')) el('reset-cust-label').textContent = t('customerLabel');
+  if (el('lbl-new-cust-pass')) el('lbl-new-cust-pass').textContent = t('newPassword');
+  if (el('lbl-confirm-cust-pass')) el('lbl-confirm-cust-pass').textContent = t('confirmPass');
+  if (el('btn-reset-cust-pass')) el('btn-reset-cust-pass').textContent = t('setNewPass');
+}
+
+// ==================== INIT DATABASE ====================
+function initDB() {
+    return {
+        customers: {},
+        transactions: [],
+        rates: {USD:1450, EUR:1550, TRY:50, IQD:1, GBP:1800, SAR:385},
+        admin: { email: '', passwordHash: ADMIN_HASH },
+        dailyLedger: {}
+    };
+}
+
+function load() {
+    try {
+        const encrypted = localStorage.getItem(STORE);
+        if (encrypted) {
+            const decrypted = decryptData(encrypted);
+            if (decrypted) return decrypted;
+        }
+        return initDB();
+    } catch { return initDB(); }
+}
+
+function save(d) { localStorage.setItem(STORE, encryptData(JSON.stringify(d))); }
+function encryptData(data) { return CryptoJS.AES.encrypt(data, ENCRYPTION_KEY).toString(); }
+function decryptData(encrypted) {
+    try {
+        const bytes = CryptoJS.AES.decrypt(encrypted, ENCRYPTION_KEY);
+        return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    } catch(e) { return null; }
+}
+
+function fmt(n) { return Number(n).toLocaleString('en-US', {maximumFractionDigits: 0}); }
+function bc(v) { return v < 0 ? 'neg' : v > 0 ? 'pos' : ''; }
+function mc(v) { return v < 0 ? 'negative' : v > 0 ? 'positive' : ''; }
+function bdg(v) { return v < 0 ? 'neg' : v > 0 ? 'pos' : 'zero'; }
+
+DB = load();
+
+// ==================== DAILY LEDGER ====================
+function updateDailyLedger() {
+    if (!DB.dailyLedger[selectedDailyDate]) {
+        DB.dailyLedger[selectedDailyDate] = {
+            openingBalance: calculateTotalBalance(),
+            transactions: [],
+            closingBalance: 0,
+            profit: 0
+        };
+    }
+}
+
+function calculateTotalBalance() {
+    let total = 0;
+    Object.values(DB.customers).forEach(c => {
+        Object.entries(c.balance).forEach(([cur, amt]) => {
+            total += amt * (DB.rates[cur] || 1);
+        });
+    });
+    return total;
+}
+
+function renderDailySummary() {
+    updateDailyLedger();
+    const daily = DB.dailyLedger[selectedDailyDate] || { openingBalance: 0, transactions: [], closingBalance: 0, profit: 0 };
+    const currentBalance = calculateTotalBalance();
+    const profit = currentBalance - daily.openingBalance;
+    
+    daily.closingBalance = currentBalance;
+    daily.profit = profit;
+    save(DB);
+    
+    const container = el('daily-summary-container');
+    container.innerHTML = `
+        <div class="daily-summary">
+            <div class="daily-title">📊 ${selectedDailyDate}</div>
+            <div class="daily-row">
+                <span class="daily-label">${t('openingBalance')}</span>
+                <span class="daily-value">${fmt(daily.openingBalance)} IQD</span>
+            </div>
+            <div class="daily-row">
+                <span class="daily-label">${t('currentBalance')}</span>
+                <span class="daily-value">${fmt(currentBalance)} IQD</span>
+            </div>
+            <div class="daily-row">
+                <span class="daily-label">${profit >= 0 ? t('netProfit') : t('netLoss')}</span>
+                <span class="daily-value ${profit >= 0 ? 'profit' : 'loss'}">${profit >= 0 ? '+' : ''}${fmt(profit)} IQD</span>
+            </div>
+        </div>
+    `;
+    
+    renderDailyTransactions();
+}
+
+function renderDailyTransactions() {
+    const todayTxs = DB.transactions.filter(tx => tx.date.startsWith(selectedDailyDate.split('-').reverse().join('/')));
+    const container = el('daily-transactions');
+    
+    if (todayTxs.length === 0) {
+        container.innerHTML = `<div class="empty"><div class="empty-icon">💸</div>${t('noDailyTxs')}</div>`;
+        return;
+    }
+    
+    container.innerHTML = todayTxs.reverse().map(tx => `
+        <div class="tx-item">
+            <div class="tx-icon ${tx.type}">${tx.type === 'plus' ? '⬆️' : '⬇️'}</div>
+            <div class="tx-details">
+                <div class="tx-name">${tx.name}</div>
+                <div class="tx-note">${tx.note || '—'}</div>
+                <div class="tx-date">${tx.date}</div>
+            </div>
+            <div class="tx-amount ${tx.type}">${tx.type === 'plus' ? '+' : '-'}${fmt(tx.amount)} ${tx.currency}</div>
+        </div>
+    `).join('');
+}
+
+function changeDailyDate(offset) {
+    const date = new Date(selectedDailyDate);
+    date.setDate(date.getDate() + offset);
+    selectedDailyDate = date.toISOString().split('T')[0];
+    renderDailySummary();
+}
+
+// ==================== ADMIN PROFILE ====================
+function showAdminProfileModal() {
+    const admin = DB.admin || { email: '' };
+    el('admin-email').value = admin.email || '';
+    el('current-password').value = '';
+    el('new-password').value = '';
+    el('confirm-password').value = '';
+    el('modal-admin-profile').classList.add('show');
+}
+
+function closeAdminProfileModal() { el('modal-admin-profile').classList.remove('show'); }
+
+function updateAdminProfile() {
+    const email = el('admin-email').value.trim();
+    const currentPass = el('current-password').value;
+    const newPass = el('new-password').value;
+    const confirmPass = el('confirm-password').value;
+    
+    if (!DB.admin) DB.admin = { email: '', passwordHash: ADMIN_HASH };
+    
+    if (newPass) {
+        if (CryptoJS.SHA256(currentPass).toString() !== DB.admin.passwordHash) {
+            showAlert('alert-profile', t('wrongPass'), 'error'); return;
+        }
+        if (newPass !== confirmPass) {
+            showAlert('alert-profile', t('passMismatch'), 'error'); return;
+        }
+        if (newPass.length < 6) {
+            showAlert('alert-profile', t('passLength'), 'error'); return;
+        }
+        DB.admin.passwordHash = CryptoJS.SHA256(newPass).toString();
+    }
+    
+    DB.admin.email = email;
+    save(DB);
+    showAlert('alert-profile', t('saveSuccess'), 'success');
+    setTimeout(closeAdminProfileModal, 1500);
+}
+
+// ==================== FORGOT PASSWORD ====================
+function showForgotPasswordModal() {
+    el('recovery-email').value = '';
+    el('recovery-code').value = '';
+    el('recovery-new-password').value = '';
+    el('modal-forgot-password').classList.add('show');
+}
+
+function closeForgotPasswordModal() { el('modal-forgot-password').classList.remove('show'); }
+
+function sendRecoveryCode() {
+    const email = el('recovery-email').value.trim();
+    const admin = DB.admin || { email: '' };
+    
+    if (!admin.email) { showAlert('alert-forgot', t('noEmail'), 'error'); return; }
+    if (email !== admin.email) { showAlert('alert-forgot', t('emailMismatch'), 'error'); return; }
+    
+    recoveryCode = Math.floor(100000 + Math.random() * 900000).toString();
+    showAlert('alert-forgot', t('codeSent') + recoveryCode, 'success');
+}
+
+function resetAdminPassword() {
+    const code = el('recovery-code').value.trim();
+    const newPass = el('recovery-new-password').value;
+    
+    if (!recoveryCode) { showAlert('alert-forgot', t('noCode'), 'error'); return; }
+    if (code !== recoveryCode) { showAlert('alert-forgot', t('invalidCode'), 'error'); return; }
+    if (newPass.length < 6) { showAlert('alert-forgot', t('passLength'), 'error'); return; }
+    
+    if (!DB.admin) DB.admin = { email: '', passwordHash: ADMIN_HASH };
+    DB.admin.passwordHash = CryptoJS.SHA256(newPass).toString();
+    save(DB);
+    
+    recoveryCode = null;
+    showAlert('alert-forgot', t('passChanged'), 'success');
+    setTimeout(() => { closeForgotPasswordModal(); el('admin-pass').value = ''; }, 1500);
+}
+
+// ==================== RESET CUSTOMER PASSWORD ====================
+let resetCustPhone = null;
+
+function showResetCustPasswordModal(phone) {
+    resetCustPhone = phone;
+    const c = DB.customers[phone];
+    el('reset-cust-name').textContent = `${c.fname} ${c.lname}`;
+    el('new-cust-password').value = '';
+    el('confirm-cust-password').value = '';
+    el('modal-reset-cust-password').classList.add('show');
+}
+
+function closeResetCustPasswordModal() { el('modal-reset-cust-password').classList.remove('show'); resetCustPhone = null; }
+
+function resetCustomerPassword() {
+    const newPass = el('new-cust-password').value;
+    const confirmPass = el('confirm-cust-password').value;
+    
+    if (newPass !== confirmPass) { showAlert('alert-reset-cust', t('passMismatch'), 'error'); return; }
+    if (newPass.length < 6) { showAlert('alert-reset-cust', t('passLength'), 'error'); return; }
+    
+    DB.customers[resetCustPhone].pass = CryptoJS.SHA256(newPass).toString();
+    save(DB);
+    
+    showAlert('alert-reset-cust', t('passChanged'), 'success');
+    setTimeout(() => { closeResetCustPasswordModal(); renderCustomers(); }, 1500);
+}
+
+// ==================== LOGIN & AUTH ====================
+function switchLoginTab(tab) {
+    el('login-admin').style.display = tab === 'admin' ? 'block' : 'none';
+    el('login-customer').style.display = tab === 'customer' ? 'block' : 'none';
+    el('btn-admin-tab').classList.toggle('active', tab === 'admin');
+    el('btn-cust-tab').classList.toggle('active', tab === 'customer');
+}
+
+function loginAdmin() {
+    const pass = el('admin-pass').value;
+    const admin = DB.admin || { passwordHash: ADMIN_HASH };
+    
+    if (CryptoJS.SHA256(pass).toString() === admin.passwordHash) {
+        currentRole = 'admin'; currentUser = 'admin';
+        showScreen('admin'); renderAdminView();
+    } else { showAlert('alert-login', t('wrongPass'), 'error'); }
+}
+
+function loginCustomer() {
+    const phone = el('cust-phone').value.trim();
+    const pass = el('cust-pass').value;
+    DB = load();
+    
+    if (!DB.customers[phone]) { showAlert('alert-login', t('notFound'), 'error'); return; }
+    if (DB.customers[phone].pass !== CryptoJS.SHA256(pass).toString()) {
+        showAlert('alert-login', t('wrongPass'), 'error'); return;
+    }
+    
+    currentRole = 'customer'; currentUser = phone;
+    showScreen('customer'); renderCustomerView();
+}
+
+function logout() { currentUser = null; currentRole = null; selectedPhone = null; showScreen('login'); }
+
+// ==================== RENDER FUNCTIONS ====================
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    el('screen-' + id).classList.add('active');
+}
+
+function showTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el('panel-' + name).classList.add('active');
+    
+    const tabs = document.querySelectorAll('.tab');
+    const tabTexts = { 'daily': t('daily'), 'customers': t('customers'), 'txs': t('txs'), 
+                       'debts': t('debts'), 'rates': t('rates'), 'new-customer': t('newCust') };
+    tabs.forEach(t => { if (t.textContent.includes(tabTexts[name])) t.classList.add('active'); });
+    
+    if (name === 'daily') renderDailySummary();
+    if (name === 'customers') renderCustomers();
+    if (name === 'txs') renderAllTxs();
+    if (name === 'debts') renderDebts();
+    if (name === 'rates') renderRates();
+}
+
+function renderAdminView() {
+    DB = load();
+    renderDailySummary();
+    renderCustomers();
+    renderAllTxs();
+    renderDebts();
+    renderRates();
+}
+
+function renderCustomers() {
+    DB = load();
+    const q = (el('search-cust')?.value || '').toLowerCase();
+    const custs = Object.values(DB.customers).filter(c => 
+        (c.fname + ' ' + c.lname + ' ' + c.phone).toLowerCase().includes(q)
+    );
+    const list = el('customers-list');
+    
+    if (!custs.length) { list.innerHTML = `<div class="empty"><div class="empty-icon">👥</div>${t('noCusts')}</div>`; return; }
+    
+    list.innerHTML = custs.map(c => {
+        const hasDebt = Object.values(c.balance).some(v => v < 0);
+        return `<div class="customer-card ${hasDebt ? 'has-debt' : ''}">
+            <div class="cust-name">👤 ${c.fname} ${c.lname} ${hasDebt ? '<span style="color:var(--red);font-size:12px">' + t('indebted') + '</span>' : ''}</div>
+            <div class="cust-info">${c.phone} | ID: ${c.id_no}</div>
+            <div class="cust-balances">${Object.entries(c.balance).map(([cur, amt]) => 
+                `<span class="bal-badge ${bdg(amt)}">${amt < 0 ? '-' : ''}${fmt(Math.abs(amt))} ${cur}</span>`
+            ).join('')}</div>
+            <div style="display:flex;gap:8px;margin-top:10px">
+                <button class="btn btn-sm" onclick="openTxModal('${c.phone}')">${t('doTx')}</button>
+                <button class="btn btn-sm btn-outline" onclick="showResetCustPasswordModal('${c.phone}')">${t('changePass')}</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function renderAllTxs() {
+    DB = load();
+    const txs = [...DB.transactions].reverse();
+    const list = el('all-txs-list');
+    
+    if (!txs.length) { list.innerHTML = `<div class="empty"><div class="empty-icon">💸</div>${t('noTxs')}</div>`; return; }
+    
+    list.innerHTML = txs.map(tx => `
+        <div class="tx-item">
+            <div class="tx-icon ${tx.type}">${tx.type === 'plus' ? '⬆️' : '⬇️'}</div>
+            <div class="tx-details">
+                <div class="tx-name">${tx.name}</div>
+                <div class="tx-note">${tx.note || '—'}</div>
+                <div class="tx-date">${tx.date}</div>
+            </div>
+            <div class="tx-amount ${tx.type}">${tx.type === 'plus' ? '+' : '-'}${fmt(tx.amount)} ${tx.currency}</div>
+        </div>
+    `).join('');
+}
+
+function renderDebts() {
+    DB = load();
+    const debtors = Object.values(DB.customers).filter(c => Object.values(c.balance).some(v => v < 0));
+    const list = el('debts-list');
+    
+    if (!debtors.length) { list.innerHTML = `<div class="empty"><div class="empty-icon">✅</div>${t('noDebts')}</div>`; return; }
+    
+    list.innerHTML = debtors.map(c => `
+        <div class="customer-card has-debt">
+            <div class="cust-name">👤 ${c.fname} ${c.lname}</div>
+            <div class="cust-info">${c.phone}</div>
+            <div class="debt-banner" style="margin-top:10px">
+                <div class="debt-banner-title">🔴 ${t('owes')}:</div>
+                <div class="debt-items">${Object.entries(c.balance).filter(([, v]) => v < 0).map(([cur, amt]) => 
+                    `<span class="debt-item" style="background:rgba(231,76,60,.15);border-radius:20px;padding:4px 12px;color:var(--red)">${fmt(Math.abs(amt))} ${cur}</span>`
+                ).join('')}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderRates() {
+    DB = load();
+    el('rates-list').innerHTML = ['USD', 'EUR', 'TRY', 'IQD', 'GBP', 'SAR'].map(c => `
+        <div class="rate-item">
+            <div class="rate-label">1 ${c} =</div>
+            <div class="rate-input-wrap" style="display:flex;align-items:center;gap:8px">
+                <input class="rate-input" type="text" id="rate-${c}" value="${fmt(DB.rates[c] || 1)}" 
+                       oninput="formatAmountInput(this)" placeholder="0" 
+                       style="width:130px;margin-bottom:0;text-align:center;font-weight:700;color:var(--gold)">
+                <span style="color:var(--muted);font-size:13px">IQD</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderCustomerView() {
+    DB = load();
+    const c = DB.customers[currentUser];
+    if (!c) return;
+    
+    el('cust-welcome').textContent = t('welcome') + ', ' + c.fname + ' ' + c.lname;
+    el('cust-balances').innerHTML = Object.entries(c.balance).map(([cur, amt]) => `
+        <div class="metric ${mc(amt)}">
+            <div class="metric-label">${cur}</div>
+            <div class="metric-value ${bc(amt)}">${amt < 0 ? '-' : ''}${fmt(Math.abs(amt))}</div>
+        </div>
+    `).join('');
+    
+    const debts = Object.entries(c.balance).filter(([, v]) => v < 0);
+    el('cust-debt-banner').innerHTML = debts.length ? `
+        <div class="debt-banner">
+            <div class="debt-banner-title">🔴 ${t('owes')}:</div>
+            <div class="debt-items">${debts.map(([cur, amt]) => 
+                `<span class="debt-item">${fmt(Math.abs(amt))} ${cur}</span>`
+            ).join('')}</div>
+        </div>
+    ` : '';
+    
+    const myTxs = DB.transactions.filter(tx => tx.phone === currentUser).reverse();
+    if (!myTxs.length) {
+        el('cust-txs').innerHTML = `<div class="empty"><div class="empty-icon">💸</div>${t('noTxsYet')}</div>`;
+        return;
+    }
+    
+    el('cust-txs').innerHTML = myTxs.map(tx => `
+        <div class="tx-item">
+            <div class="tx-icon ${tx.type}">${tx.type === 'plus' ? '⬆️' : '⬇️'}</div>
+            <div class="tx-details">
+                <div class="tx-note">${tx.note || '—'}</div>
+                <div class="tx-date">${tx.date}</div>
+            </div>
+            <div class="tx-amount ${tx.type}">${tx.type === 'plus' ? '+' : '-'}${fmt(tx.amount)} ${tx.currency}</div>
+        </div>
+    `).join('');
+}
+
+// ==================== TRANSACTIONS ====================
+function openTxModal(phone) {
+    DB = load(); selectedPhone = phone;
+    const c = DB.customers[phone];
+    
+    el('modal-cust-name').textContent = '💸 ' + c.fname + ' ' + c.lname;
+    el('modal-balances').innerHTML = Object.entries(c.balance).map(([cur, amt]) => `
+        <div class="metric ${mc(amt)}">
+            <div class="metric-label">${cur}</div>
+            <div class="metric-value ${bc(amt)}">${amt < 0 ? '-' : ''}${fmt(Math.abs(amt))}</div>
+        </div>
+    `).join('');
+    
+    const hasDebt = Object.values(c.balance).some(v => v < 0);
+    const dw = el('modal-debt-warn');
+    if (hasDebt) { dw.textContent = t('debtWarn'); dw.classList.add('show'); }
+    else dw.classList.remove('show');
+    
+    el('tx-amount').value = ''; el('tx-note').value = '';
+    el('alert-tx').classList.remove('show'); el('tx-preview').style.display = 'none';
+    el('modal-tx').classList.add('show');
+}
+
+function updatePreview() {
+    if (!selectedPhone) return;
+    DB = load();
+    const c = DB.customers[selectedPhone];
+    const amtStr = el('tx-amount').value.replace(/,/g, '');
+    const amount = parseFloat(amtStr);
+    const currency = el('tx-currency').value;
+    const type = el('tx-type').value;
+    
+    if (!amount || amount <= 0) { el('tx-preview').style.display = 'none'; return; }
+    
+    const cur = c.balance[currency] || 0;
+    const after = type === 'deposit' ? cur + amount : cur - amount;
+    
+    el('tx-preview').style.display = 'block';
+    el('prev-cur-val').textContent = (cur < 0 ? '-' : '') + fmt(Math.abs(cur));
+    el('prev-cur-val').style.color = cur < 0 ? 'var(--red)' : cur > 0 ? 'var(--green)' : 'var(--text)';
+    el('prev-after-val').textContent = (after < 0 ? '-' : '') + fmt(Math.abs(after));
+    el('prev-after-val').style.color = after < 0 ? 'var(--red)' : after > 0 ? 'var(--green)' : 'var(--text)';
+    
+    const dr = el('prev-debt-row');
+    if (after < 0) { dr.style.display = 'flex'; el('prev-debt-val').textContent = fmt(Math.abs(after)) + ' ' + currency; }
+    else dr.style.display = 'none';
+}
+
+function confirmTx() {
+    DB = load();
+    const phone = selectedPhone, type = el('tx-type').value;
+    const amount = parseFloat(el('tx-amount').value.replace(/,/g, ''));
+    const currency = el('tx-currency').value, note = el('tx-note').value.trim();
+    
+    if (!amount || amount <= 0) { showAlert('alert-tx', t('invalidAmount'), 'error'); return; }
+    
+    const c = DB.customers[phone];
+    const cur = c.balance[currency] || 0;
+    DB.customers[phone].balance[currency] = type === 'deposit' ? cur + amount : cur - amount;
+    const bal_after = DB.customers[phone].balance[currency];
+    
+    const now = new Date();
+    DB.transactions.push({
+        phone, name: c.fname + ' ' + c.lname,
+        type: type === 'deposit' ? 'plus' : 'minus',
+        amount, currency, note, bal_after,
+        date: now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'})
+    });
+    
+    save(DB); closeModal(); renderAdminView();
+    showAlert('alert-new', t('txDone'), 'success');
+}
+
+function closeModal() { el('modal-tx').classList.remove('show'); selectedPhone = null; }
+
+// ==================== CUSTOMERS ====================
+function addCustomer() {
+    const fname = el('new-fname').value.trim(), lname = el('new-lname').value.trim();
+    const phone = el('new-tel').value.trim(), id_no = el('new-id').value.trim(), pass = el('new-pass').value;
+    
+    if (!fname || !lname || !phone || !id_no || !pass) { showAlert('alert-new', t('fillAll'), 'error'); return; }
+    DB = load();
+    if (DB.customers[phone]) { showAlert('alert-new', t('phoneExists'), 'error'); return; }
+    
+    DB.customers[phone] = {
+        fname, lname, phone, id_no,
+        pass: CryptoJS.SHA256(pass).toString(),
+        balance: {USD: 0, EUR: 0, TRY: 0, IQD: 0, GBP: 0, SAR: 0}
+    };
+    
+    save(DB);
+    el('new-fname').value = ''; el('new-lname').value = ''; el('new-tel').value = '';
+    el('new-id').value = ''; el('new-pass').value = '';
+    
+    showAlert('alert-new', t('registered'), 'success');
+    setTimeout(() => showTab('customers'), 800);
+}
+
+function saveRates() {
+    DB = load();
+    ['USD', 'EUR', 'TRY', 'IQD', 'GBP', 'SAR'].forEach(c => {
+        DB.rates[c] = parseFloat(el('rate-' + c).value.replace(/,/g, '')) || 1;
+    });
+    save(DB);
+    showAlert('alert-rates', t('ratesSaved'), 'success');
+}
+
+// ==================== BACKUP ====================
+function showBackupModal() { alert('خاصية النسخ الاحتياطي - قيد التطوير'); }
+
+// ==================== UTILS ====================
+function formatAmountInput(inp) {
+    let v = inp.value.replace(/[^0-9]/g, '');
+    if (v) inp.value = Number(v).toLocaleString('en-US');
+}
+
+function showAlert(id, msg, type = 'error') {
+    const a = el(id);
+    if (!a) return;
+    a.textContent = msg;
+    a.className = 'alert ' + type + ' show';
+    setTimeout(() => a.classList.remove('show'), 3500);
+}
+
+// ==================== EVENT LISTENERS ====================
+el('modal-tx')?.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+el('modal-admin-profile')?.addEventListener('click', function(e) { if (e.target === this) closeAdminProfileModal(); });
+el('modal-forgot-password')?.addEventListener('click', function(e) { if (e.target === this) closeForgotPasswordModal(); });
+el('modal-reset-cust-password')?.addEventListener('click', function(e) { if (e.target === this) closeResetCustPasswordModal(); });
+
+// ==================== INIT ====================
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        el('splash').style.opacity = '0';
+        setTimeout(() => {
+            el('splash').style.display = 'none';
+            showScreen('login');
+            setLang('ar'); // تعيين العربية كلغة افتراضية
+        }, 600);
+    }, 2000);
+});
+</script>
+</body>
+</html>
