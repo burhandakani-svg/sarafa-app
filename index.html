@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="صيرفة المستقبل">
+<meta name="theme-color" content="#0A0C10">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi2YXYs9ix2K/ZhCDYp9mE2YXYudmI2YQiLCJzaG9ydF9uYW1lIjoi2YXYs9ix2K/ZhCIsInRoZW1lX2NvbG9yIjoiI0NBQTg0QyIsImJhY2tncm91bmRfY29sb3IiOiIjMEEwQzEwIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhkcFpIUm9QU0l4T0RBaUlHaGxhV2RvZEQwaU1UZ3dJaUJ6ZEhKdmEyVTlJbU5uYVc1blpYSWlJR1pwYkd3OUltWmhiV2xzZVZCeWIzWnBaR1Z5SWo0S0lDQWdJRHhuSUdGNFBTSXhNQ0lnYzJ4a1BTSXhNQ0lnWm1sc2JDMWliMnhrTFhObVlXeHpaV1E5SW1KdmJHUWlQZ29nSUNBZ0lDQWdJRHh6WmlCbWFXeHNQU0owY25WbFBTSStDaUFnSUNBZ0lDQWdJQ0FnUEhOaUlHTjBlV3hsUFNKcGJtaHZjaUlnY0dGblpUMGlNVE13TlRZM0lpQnBaRDBpWkdWbVlYVnNkQ0lnWm1sc2JDMWliMnhsTFhOMVl6MGlkWFJ5Wlc0dWNtVmthWEp6SWlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhOMVl6MGlZV1J2WW1VZ1kyOXNiM0psWkNJK1BDOXpZajRLSUNBZ0lDQWdJQ0E4YzJJZ1kzUjViR1U5SW1sdWFHOXlJaUJ3WVdkbFBTSXhOVEEwTURnaUlHbGtQU0prWldaaGRXeDBJaUJtYVd4c0xXSnZiR1V0YzNWalBTSjFkSEpsYmk1eVpXUjFjbk1pSUhodGJHNXpQU0pvZEhSd09pOHZkM2QzTGpjekxtOXlaeTh5TURBd0wzTjJaeUlnYzNWalBTSmhaRzlpWlNCamIyeHZjbVZrSWo0OEwzTmlQZ29nSUNBZ0lDQWdJRHh6WmlCaFkzUnZjbUYwYVc5dVBTSTBNVEF4TURBaUlHWnBiR3c5SW5SeWRXVWlQZ29nSUNBZ0lDQWdJQ0FnSUR4ellpQmpkSGxzWlQwaWFXNXNiMk5oZEdsdmJpSWdjR0ZuWlQwaU1UY3lPVFF3SWlCcFpEMGlZM0psWVhSbFpDSStQQzl6WWo0S0lDQWdJQ0FnSUNBOEwyYytDaUFnSUR3dlp6NEsiXX0=">
+<title>صيرفة المستقبل</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<style>
+:root {
+  --gold:#C9A84C; --gold-light:#E8C97A; --gold-dark:#9A7A30;
+  --bg:#0A0C10; --bg2:#111318; --bg3:#181C24; --card:#1A1F2B;
+  --border:rgba(201,168,76,0.2); --text:#F0EAD6; --muted:#8A8E9A;
+  --green:#2ECC71; --red:#E74C3C; --orange:#E67E22; --blue:#3498DB;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;direction:rtl}
+#splash{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s}
+.splash-logo{font-size:64px;margin-bottom:16px}
+.splash-title{font-size:28px;font-weight:700;color:var(--gold);letter-spacing:2px;margin-bottom:8px}
+.splash-sub{font-size:14px;color:var(--muted);margin-bottom:40px}
+.splash-bar{width:160px;height:3px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.splash-fill{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));border-radius:4px;animation:fill 1.8s ease forwards}
+@keyframes fill{from{width:0}to{width:100%}}
+.screen{display:none;min-height:100vh;padding-bottom:40px}
+.screen.active{display:block}
+.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header-logo{font-size:20px;font-weight:700;color:var(--gold)}
+.header-sub{font-size:11px;color:var(--muted)}
+.btn-icon{background:rgba(201,168,76,.15);border:1px solid var(--border);color:var(--gold);padding:8px 12px;border-radius:8px;font-size:13px;cursor:pointer;margin-left:8px}
+.btn-logout{background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);color:var(--red);padding:8px 14px;border-radius:8px;font-size:13px;font-family:'Tajawal',sans-serif;cursor:pointer}
+.lang-bar{display:flex;gap:8px;padding:14px 20px 0;overflow-x:auto;scrollbar-width:none}
+.lang-bar::-webkit-scrollbar{display:none}
+.lang-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:13px;font-family:'Tajawal',sans-serif;cursor:pointer;white-space:nowrap;transition:all .2s}
+.lang-btn.active{background:var(--gold);border-color:var(--gold);color:#000;font-weight:700}
+.login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px}
+.login-logo{font-size:56px;margin-bottom:12px}
+.login-title{font-size:26px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;width:100%;max-width:400px}
+.toggle-row{display:flex;margin-bottom:20px;background:var(--bg3);border-radius:10px;padding:4px}
+.toggle-btn{flex:1;padding:10px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-family:'Tajawal',sans-serif;font-size:14px;cursor:pointer;transition:all .2s}
+.toggle-btn.active{background:var(--gold);color:#000;font-weight:700}
+label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+input,select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:16px;padding:12px 14px;margin-bottom:14px;outline:none;transition:border .2s;direction:ltr}
+input:focus,select:focus{border-color:var(--gold)}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border:none;border-radius:10px;color:#000;font-family:'Tajawal',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;margin-bottom:8px}
+.btn:active{transform:scale(.98);opacity:.9}
+.btn-sm{padding:10px 14px;font-size:14px;width:auto;margin-bottom:0}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+.install-btn{background:linear-gradient(135deg,#4CAF50,#2E7D32);color:white;border:none;padding:16px 24px;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer;margin:20px 0;width:100%;box-shadow:0 4px 15px rgba(76,175,80,0.3)}
+.alert{padding:12px 14px;border-radius:10px;font-size:14px;margin-bottom:14px;display:none}
+.alert.error{background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);color:var(--red)}
+.alert.success{background:rgba(46,204,113,.15);border:1px solid rgba(46,204,113,.3);color:var(--green)}
+.alert.show{display:block}
+.tabs{display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);background:var(--bg2);padding:0 16px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:14px 18px;border:none;background:transparent;color:var(--muted);font-family:'Tajawal',sans-serif;font-size:14px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.content{padding:20px;max-width:600px;margin:0 auto}
+.section-title{font-size:16px;font-weight:700;color:var(--gold);margin-bottom:16px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.metric{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center}
+.metric-value{font-size:15px;font-weight:700;direction:ltr}
+.metric-value.neg{color:var(--red)}
+.metric-value.pos{color:var(--green)}
+.customer-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.cust-name{font-size:16px;font-weight:700;margin-bottom:4px}
+.cust-info{font-size:12px;color:var(--muted);direction:ltr;margin-bottom:10px}
+.cust-balances{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.bal-badge{border-radius:20px;padding:4px 10px;font-size:12px;direction:ltr}
+.bal-badge.pos{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.3);color:var(--green)}
+.bal-badge.neg{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:var(--red)}
+.tx-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px}
+.tx-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.tx-icon.plus{background:rgba(46,204,113,.15)}
+.tx-icon.minus{background:rgba(231,76,60,.15)}
+.tx-details{flex:1;min-width:0}
+.tx-name{font-size:14px;font-weight:600}
+.tx-note{font-size:12px;color:var(--muted)}
+.tx-date{font-size:10px;color:var(--muted);direction:ltr;margin-top:2px}
+.tx-amount{text-align:left;direction:ltr;font-weight:700;font-size:15px;flex-shrink:0}
+.tx-amount.plus{color:var(--green)}
+.tx-amount.minus{color:var(--red)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:450px;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:16px}
+.modal-close{float:left;background:var(--bg3);border:none;color:var(--text);width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer}
+.empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:15px}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.daily-summary{background:linear-gradient(135deg,var(--card),var(--bg3));border:2px solid var(--gold);border-radius:16px;padding:20px;margin-bottom:20px}
+.daily-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.daily-label{color:var(--muted)}
+.daily-value{font-weight:700;direction:ltr}
+.daily-value.profit{color:var(--green)}
+.daily-value.loss{color:var(--red)}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="splash-logo">🏦</div>
+  <div class="splash-title">صيرفة المستقبل</div>
+  <div class="splash-sub">Sayrafa Al-Mustaqbal</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
+
+<!-- شاشة الترحيب مع زر التثبيت -->
+<div id="screen-welcome" class="screen active">
+  <div class="login-wrap">
+    <div class="login-logo">🏦</div>
+    <div class="login-title">صيرفة المستقبل</div>
+    <div class="login-sub">نظام إدارة الصرافة المتكامل</div>
+    
+    <div class="card" style="text-align:center">
+      <p style="margin-bottom:20px;color:var(--muted)">👋 أهلاً بك في تطبيق الصيرفة</p>
+      
+      <button class="install-btn" onclick="showInstallInstructions()">
+        📲 تثبيت التطبيق على الجهاز
+      </button>
+      
+      <div style="margin:20px 0;border-top:1px solid var(--border)"></div>
+      
+      <button class="btn" onclick="goToLogin()" style="margin-top:10px">
+        ➡️ متابعة للتطبيق
+      </button>
+      
+      <p style="font-size:12px;color:var(--muted);margin-top:20px">
+        بعد التثبيت، التطبيق يعمل بدون إنترنت
+      </p>
+    </div>
+    
+    <div class="lang-bar" style="margin-top:20px;justify-content:center">
+      <button class="lang-btn active" onclick="setLang('ar')">🇸🇦 عربي</button>
+      <button class="lang-btn" onclick="setLang('ku')">🏔️ کوردی</button>
+      <button class="lang-btn" onclick="setLang('tr')">🇹🇷 Türkçe</button>
+      <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div id="screen-login" class="screen">
+  <div class="login-wrap">
+    <div class="login-logo">🏦</div>
+    <div class="login-title">صيرفة المستقبل</div>
+    <div class="login-sub">نظام إدارة الصرافة المتكامل</div>
+    
+    <div class="card">
+      <div class="toggle-row">
+        <button class="toggle-btn active" onclick="switchLoginTab('admin')">👑 المدير</button>
+        <button class="toggle-btn" onclick="switchLoginTab('customer')">👤 الزبون</button>
+      </div>
+      <div id="alert-login" class="alert error"></div>
+      <div id="login-admin">
+        <label>كلمة السر</label>
+        <input type="password" id="admin-pass" placeholder="••••••••">
+        <button class="btn" onclick="loginAdmin()">دخول</button>
+      </div>
+      <div id="login-customer" style="display:none">
+        <label>رقم الهاتف</label>
+        <input type="tel" id="cust-phone" placeholder="+964...">
+        <label>كلمة السر</label>
+        <input type="password" id="cust-pass" placeholder="••••••••">
+        <button class="btn" onclick="loginCustomer()">دخول</button>
+      </div>
+    </div>
+    
+    <button class="install-btn" onclick="showInstallInstructions()" style="margin-top:20px;font-size:14px;padding:12px">
+      📲 تثبيت التطبيق
+    </button>
+  </div>
+</div>
+
+<!-- ADMIN SCREEN (مختصرة للعرض) -->
+<div id="screen-admin" class="screen">
+  <div class="header">
+    <div>
+      <div class="header-logo">🏦 صيرفة المستقبل</div>
+      <div class="header-sub">لوحة المدير</div>
+    </div>
+    <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('daily')">📊 اليومية</button>
+    <button class="tab" onclick="showTab('customers')">👥 زبائن</button>
+    <button class="tab" onclick="showTab('txs')">💸 حركات</button>
+    <button class="tab" onclick="showTab('rates')">💱 أسعار</button>
+  </div>
+  
+  <div id="panel-daily" class="tab-panel active">
+    <div class="content">
+      <div class="daily-summary">
+        <div class="daily-row"><span class="daily-label">الرصيد الحالي</span><span class="daily-value" id="admin-balance">0 IQD</span></div>
+      </div>
+      <div class="section-title">مرحباً بك في لوحة التحكم</div>
+      <p style="color:var(--muted);text-align:center">كلمة سر المدير الافتراضية: admin123</p>
+    </div>
+  </div>
+  
+  <div id="panel-customers" class="tab-panel"><div class="content"><div id="customers-list"></div></div></div>
+  <div id="panel-txs" class="tab-panel"><div class="content"><div id="all-txs-list"></div></div></div>
+  <div id="panel-rates" class="tab-panel"><div class="content"><p style="color:var(--muted)">قسم الأسعار</p></div></div>
+</div>
+
+<!-- CUSTOMER SCREEN -->
+<div id="screen-customer" class="screen">
+  <div class="header">
+    <div>
+      <div class="header-logo">🏦 صيرفة المستقبل</div>
+      <div class="header-sub" id="cust-welcome">مرحباً</div>
+    </div>
+    <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+  </div>
+  <div class="content">
+    <div class="section-title">💰 رصيدي</div>
+    <div class="metrics" id="cust-balances"></div>
+    <p style="color:var(--muted);text-align:center;margin-top:20px">للاستفسار عن الرصيد، تواصل مع المدير</p>
+  </div>
+</div>
+
+<!-- نافذة تعليمات التثبيت -->
+<div class="modal-overlay" id="install-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeInstallModal()">×</button>
+    <div class="modal-title">📲 كيفية تثبيت التطبيق</div>
+    <div id="install-instructions"></div>
+    <button class="btn" onclick="closeInstallModal()" style="margin-top:20px">حسناً، فهمت</button>
+  </div>
+</div>
+
+<script>
+const ENCRYPTION_KEY = "SayrafaSecureKey2024!@#";
+const STORE = 'sarafa_simple_v1';
+const ADMIN_HASH = CryptoJS.SHA256('admin123').toString();
+
+let DB, currentUser = null, currentRole = null;
+let deferredPrompt;
+
+// تحميل البيانات
+function load() {
+    try {
+        const encrypted = localStorage.getItem(STORE);
+        if (encrypted) {
+            const bytes = CryptoJS.AES.decrypt(encrypted, ENCRYPTION_KEY);
+            return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        }
+    } catch(e) {}
+    return { customers: {}, transactions: [], rates: { USD: 1450, EUR: 1550, TRY: 50, IQD: 1, GBP: 1800, SAR: 385 } };
+}
+
+function save(d) { localStorage.setItem(STORE, CryptoJS.AES.encrypt(JSON.stringify(d), ENCRYPTION_KEY).toString()); }
+function fmt(n) { return Number(n).toLocaleString('en-US', { maximumFractionDigits: 0 }); }
+function el(id) { return document.getElementById(id); }
+
+DB = load();
+
+// التقاط حدث التثبيت
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+// عرض تعليمات التثبيت
+function showInstallInstructions() {
+  const instructions = el('install-instructions');
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  const isAndroid = /Android/.test(navigator.userAgent);
+  
+  if (deferredPrompt) {
+    // أندرويد مع دعم PWA
+    instructions.innerHTML = `
+      <p style="margin-bottom:16px;text-align:center">✅ جهازك يدعم التثبيت المباشر</p>
+      <button class="install-btn" onclick="installPWA()" style="font-size:16px">📱 تثبيت الآن</button>
+    `;
+  } else if (isIOS) {
+    // آيفون
+    instructions.innerHTML = `
+      <div style="text-align:center">
+        <p style="margin-bottom:16px">📱 للتثبيت على الآيفون:</p>
+        <div style="background:var(--bg3);padding:20px;border-radius:12px;margin-bottom:16px">
+          <p>1️⃣ اضغط على زر <strong style="color:var(--gold)">مشاركة 📤</strong> في الأسفل</p>
+          <p>2️⃣ اختر <strong style="color:var(--gold)">"إضافة إلى الشاشة الرئيسية"</strong></p>
+          <p>3️⃣ اضغط <strong style="color:var(--gold)">"إضافة"</strong></p>
+        </div>
+        <p style="color:var(--muted);font-size:12px">* استخدم متصفح Safari</p>
+      </div>
+    `;
+  } else if (isAndroid) {
+    // أندرويد بدون PWA
+    instructions.innerHTML = `
+      <div style="text-align:center">
+        <p style="margin-bottom:16px">📱 للتثبيت على الأندرويد:</p>
+        <div style="background:var(--bg3);padding:20px;border-radius:12px;margin-bottom:16px">
+          <p>1️⃣ اضغط على <strong style="color:var(--gold)">⋮ (القائمة)</strong> في الأعلى</p>
+          <p>2️⃣ اختر <strong style="color:var(--gold)">"تثبيت التطبيق"</strong> أو "إضافة للشاشة"</p>
+        </div>
+      </div>
+    `;
+  } else {
+    // أجهزة أخرى
+    instructions.innerHTML = `
+      <p style="text-align:center">💻 على الكمبيوتر: استخدم التطبيق من المتصفح مباشرة</p>
+    `;
+  }
+  
+  el('install-modal').classList.add('show');
+}
+
+function installPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        alert('✅ جاري تثبيت التطبيق...');
+      }
+      deferredPrompt = null;
+      closeInstallModal();
+    });
+  }
+}
+
+function closeInstallModal() { el('install-modal').classList.remove('show'); }
+
+function goToLogin() { showScreen('login'); }
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  el('screen-' + id).classList.add('active');
+}
+
+function switchLoginTab(tab) {
+  el('login-admin').style.display = tab === 'admin' ? 'block' : 'none';
+  el('login-customer').style.display = tab === 'customer' ? 'block' : 'none';
+  document.querySelectorAll('.toggle-btn').forEach((b, i) => 
+    b.classList.toggle('active', (i === 0 && tab === 'admin') || (i === 1 && tab === 'customer'))
+  );
+}
+
+function loginAdmin() {
+  if (CryptoJS.SHA256(el('admin-pass').value).toString() === ADMIN_HASH) {
+    currentRole = 'admin'; currentUser = 'admin';
+    showScreen('admin');
+    updateAdminBalance();
+  } else {
+    const a = el('alert-login');
+    a.textContent = '❌ كلمة السر خاطئة! (admin123)';
+    a.classList.add('error', 'show');
+    setTimeout(() => a.classList.remove('show'), 3000);
+  }
+}
+
+function loginCustomer() {
+  const phone = el('cust-phone').value.trim();
+  const pass = el('cust-pass').value;
+  DB = load();
+  
+  if (!DB.customers[phone]) {
+    alert('❌ الزبون غير موجود! تواصل مع المدير لإنشاء حساب');
+    return;
+  }
+  
+  if (DB.customers[phone].pass !== CryptoJS.SHA256(pass).toString()) {
+    alert('❌ كلمة السر خاطئة!');
+    return;
+  }
+  
+  currentRole = 'customer'; currentUser = phone;
+  showScreen('customer');
+  renderCustomerView();
+}
+
+function logout() {
+  currentUser = null; currentRole = null;
+  el('admin-pass').value = ''; el('cust-phone').value = ''; el('cust-pass').value = '';
+  showScreen('login');
+}
+
+function updateAdminBalance() {
+  let total = 0;
+  Object.values(DB.customers).forEach(c => {
+    Object.entries(c.balance).forEach(([cur, amt]) => {
+      total += amt * (DB.rates[cur] || 1);
+    });
+  });
+  if (el('admin-balance')) el('admin-balance').textContent = fmt(total) + ' IQD';
+}
+
+function renderCustomerView() {
+  const c = DB.customers[currentUser];
+  if (!c) return;
+  
+  el('cust-welcome').textContent = 'مرحباً, ' + c.fname + ' ' + c.lname;
+  el('cust-balances').innerHTML = Object.entries(c.balance).map(([cur, amt]) => `
+    <div class="metric">
+      <div class="metric-label">${cur}</div>
+      <div class="metric-value ${amt < 0 ? 'neg' : amt > 0 ? 'pos' : ''}">${amt < 0 ? '-' : ''}${fmt(Math.abs(amt))}</div>
+    </div>
+  `).join('');
+}
+
+function showTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function setLang(l) {
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.includes(l === 'ar' ? 'عربي' : l === 'ku' ? 'کوردی' : l === 'tr' ? 'Türkçe' : 'English'));
+  });
+  document.body.style.direction = (l === 'ar' || l === 'ku') ? 'rtl' : 'ltr';
+}
+
+// بدء التشغيل
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    el('splash').style.opacity = '0';
+    setTimeout(() => {
+      el('splash').style.display = 'none';
+    }, 600);
+  }, 2000);
+});
+</script>
+</body>
+</html>
