@@ -7,265 +7,411 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BD Office">
 <meta name="theme-color" content="#0A0C10">
-<title>BD Office</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<title>BD Office - نظام الصرافة المتكامل</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <style>
-:root {
-  --gold:#C9A84C; --gold-light:#E8C97A; --gold-dark:#9A7A30;
-  --bg:#0A0C10; --bg2:#111318; --bg3:#181C24; --card:#1A1F2B;
-  --border:rgba(201,168,76,0.2); --text:#F0EAD6; --muted:#8A8E9A;
-  --green:#2ECC71; --red:#E74C3C; --orange:#E67E22; --blue:#3498DB;
-  --r:14px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;direction:rtl}
-#splash{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s}
-.splash-logo{font-size:64px;margin-bottom:16px}
-.splash-title{font-size:28px;font-weight:700;color:var(--gold);letter-spacing:2px;margin-bottom:8px}
-.splash-sub{font-size:14px;color:var(--muted);margin-bottom:40px}
-.splash-bar{width:160px;height:3px;background:var(--bg3);border-radius:4px;overflow:hidden}
-.splash-fill{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));border-radius:4px;animation:fill 1.8s ease forwards}
-@keyframes fill{from{width:0}to{width:100%}}
-.screen{display:none;min-height:100vh;padding-bottom:40px}
-.screen.active{display:block}
-.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.header-logo{font-size:20px;font-weight:700;color:var(--gold)}
-.header-sub{font-size:11px;color:var(--muted)}
-.btn-icon{background:rgba(201,168,76,.15);border:1px solid var(--border);color:var(--gold);padding:8px 12px;border-radius:8px;font-size:13px;cursor:pointer;margin-left:8px}
-.btn-logout{background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);color:var(--red);padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer}
-.btn-danger{background:rgba(231,76,60,.2);border:1px solid var(--red);color:var(--red);}
-.login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px}
-.login-logo{font-size:56px;margin-bottom:12px}
-.login-title{font-size:26px;font-weight:700;color:var(--gold);margin-bottom:4px}
-.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;width:100%;max-width:400px}
-.toggle-row{display:flex;margin-bottom:20px;background:var(--bg3);border-radius:10px;padding:4px}
-.toggle-btn{flex:1;padding:10px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-size:14px;cursor:pointer;transition:all .2s}
-.toggle-btn.active{background:var(--gold);color:#000;font-weight:700}
-label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
-input,select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:16px;padding:12px 14px;margin-bottom:14px;outline:none;transition:border .2s;direction:ltr}
-input:focus,select:focus{border-color:var(--gold)}
-.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border:none;border-radius:10px;color:#000;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;margin-bottom:8px}
-.btn:active{transform:scale(.98);opacity:.9}
-.btn-sm{padding:10px 14px;font-size:14px;width:auto;margin-bottom:0}
-.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold)}
-.install-btn{background:linear-gradient(135deg,#4CAF50,#2E7D32);color:white;border:none;padding:16px 24px;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer;margin:20px 0;width:100%}
-.alert{padding:12px 14px;border-radius:10px;font-size:14px;margin-bottom:14px;display:none}
-.alert.error{background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);color:var(--red)}
-.alert.success{background:rgba(46,204,113,.15);border:1px solid rgba(46,204,113,.3);color:var(--green)}
-.alert.show{display:block}
-.tabs{display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);background:var(--bg2);padding:0 16px}
-.tabs::-webkit-scrollbar{display:none}
-.tab{padding:14px 18px;border:none;background:transparent;color:var(--muted);font-size:14px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
-.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.tab-panel{display:none}
-.tab-panel.active{display:block}
-.content{padding:20px;max-width:600px;margin:0 auto}
-.section-title{font-size:16px;font-weight:700;color:var(--gold);margin-bottom:16px}
-.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
-.metric{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center}
-.metric-value{font-size:15px;font-weight:700;direction:ltr}
-.metric-value.neg{color:var(--red)}
-.metric-value.pos{color:var(--green)}
-.customer-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s}
-.customer-card:hover{background:var(--bg3)}
-.customer-card.has-debt{border-color:rgba(231,76,60,.6);border-width:2px}
-.customer-card.has-credit{border-color:rgba(46,204,113,.6);border-width:2px}
-.cust-name{font-size:16px;font-weight:700;margin-bottom:4px}
-.cust-info{font-size:12px;color:var(--muted);direction:ltr;margin-bottom:10px}
-.cust-balances{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.bal-badge{border-radius:20px;padding:4px 10px;font-size:12px;direction:ltr}
-.bal-badge.pos{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.3);color:var(--green)}
-.bal-badge.neg{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:var(--red)}
-.tx-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px}
-.tx-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.tx-icon.deposit{background:rgba(46,204,113,.15)}
-.tx-icon.withdraw{background:rgba(231,76,60,.15)}
-.tx-details{flex:1;min-width:0}
-.tx-name{font-size:14px;font-weight:600}
-.tx-note{font-size:12px;color:var(--muted)}
-.tx-date{font-size:10px;color:var(--muted);direction:ltr;margin-top:2px}
-.tx-amount{text-align:left;direction:ltr;font-weight:700;font-size:15px;flex-shrink:0}
-.tx-amount.deposit{color:var(--green)}
-.tx-amount.withdraw{color:var(--red)}
-.tx-actions{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
-.btn-edit{background:rgba(52,152,219,.15);border:1px solid var(--blue);color:var(--blue);padding:4px 8px;border-radius:5px;font-size:11px;cursor:pointer}
-.btn-delete{background:rgba(231,76,60,.15);border:1px solid var(--red);color:var(--red);padding:4px 8px;border-radius:5px;font-size:11px;cursor:pointer}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:center;justify-content:center}
-.modal-overlay.show{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:450px;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-title{font-size:18px;font-weight:700;color:var(--gold);margin-bottom:16px}
-.modal-close{float:left;background:var(--bg3);border:none;color:var(--text);width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer}
-.empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:15px}
-.empty-icon{font-size:40px;margin-bottom:12px}
-.daily-summary{background:linear-gradient(135deg,var(--card),var(--bg3));border:2px solid var(--gold);border-radius:16px;padding:20px;margin-bottom:20px}
-.daily-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
-.daily-label{color:var(--muted)}
-.daily-value{font-weight:700;direction:ltr}
-.daily-value.profit{color:var(--green)}
-.daily-value.loss{color:var(--red)}
-.office-funds{background:var(--card);border:1px solid var(--gold);border-radius:16px;padding:20px;margin-bottom:20px}
-.funds-title{font-size:16px;font-weight:700;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.funds-grid{display:flex;flex-direction:column;gap:16px}
-.fund-block{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px}
-.fund-block-title{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px}
-.fund-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px}
-.fund-item{background:var(--bg2);border-radius:8px;padding:12px}
-.fund-label{font-size:12px;color:var(--muted);margin-bottom:6px}
-.fund-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:16px;font-weight:700;padding:10px;text-align:center;direction:ltr;margin-bottom:0}
-.fund-input:focus{border-color:var(--gold)}
-.fund-total{background:rgba(201,168,76,0.1);border-radius:8px;padding:10px;margin-top:8px;display:flex;justify-content:space-between;align-items:center}
-.fund-total-label{color:var(--muted);font-size:13px}
-.fund-total-value{color:var(--gold);font-weight:700;font-size:15px;direction:ltr}
-.total-row{background:var(--gold);border-radius:12px;padding:16px;margin-top:16px;display:flex;justify-content:space-between;align-items:center}
-.total-label{color:#000;font-weight:700;font-size:16px}
-.total-value{color:#000;font-weight:900;font-size:20px;direction:ltr}
-.rate-input-small{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--gold);font-size:14px;font-weight:700;padding:8px;text-align:center;direction:ltr;margin-bottom:0}
-.admin-contact-card{background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:16px;padding:20px;margin-bottom:24px;text-align:center}
-.admin-name{color:#000;font-size:20px;font-weight:800;margin-bottom:8px}
-.admin-phone{color:#000;font-size:28px;font-weight:900;margin-bottom:16px;direction:ltr}
-.admin-label{color:rgba(0,0,0,0.7);font-size:14px;margin-bottom:4px}
-.debt-summary{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);border-radius:12px;padding:16px;margin-bottom:20px}
-.debt-summary-title{color:var(--red);font-weight:700;margin-bottom:12px;font-size:16px}
-.debt-summary-row{display:flex;justify-content:space-between;padding:6px 0}
-.debt-summary-label{color:var(--muted)}
-.debt-summary-value{font-weight:700;direction:ltr}
-.debt-summary-value.red{color:var(--red)}
-.debt-total-row{background:rgba(231,76,60,.2);border-radius:8px;padding:12px;margin-top:12px;display:flex;justify-content:space-between;align-items:center}
-.debt-total-label{color:var(--red);font-weight:700;font-size:15px}
-.debt-total-value{color:var(--red);font-weight:900;font-size:18px;direction:ltr}
-.credit-summary{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.3);border-radius:12px;padding:16px;margin-bottom:20px}
-.credit-summary-title{color:var(--green);font-weight:700;margin-bottom:12px;font-size:16px}
-.credit-summary-row{display:flex;justify-content:space-between;padding:6px 0}
-.credit-summary-label{color:var(--muted)}
-.credit-summary-value{font-weight:700;direction:ltr}
-.credit-summary-value.green{color:var(--green)}
-.credit-total-row{background:rgba(46,204,113,.2);border-radius:8px;padding:12px;margin-top:12px;display:flex;justify-content:space-between;align-items:center}
-.credit-total-label{color:var(--green);font-weight:700;font-size:15px}
-.credit-total-value{color:var(--green);font-weight:900;font-size:18px;direction:ltr}
-.debt-card{background:var(--card);border:1px solid rgba(231,76,60,.4);border-radius:12px;padding:16px;margin-bottom:12px}
-.credit-card{background:var(--card);border:1px solid rgba(46,204,113,.4);border-radius:12px;padding:16px;margin-bottom:12px}
-.debt-card-header,.credit-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.debt-card-name,.credit-card-name{font-size:16px;font-weight:700}
-.debt-card-phone,.credit-card-phone{font-size:12px;color:var(--muted);direction:ltr}
-.debt-items-grid,.credit-items-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:8px}
-.debt-item-card,.credit-item-card{background:var(--bg3);border-radius:8px;padding:10px;text-align:center}
-.debt-item-currency,.credit-item-currency{font-size:14px;color:var(--gold);margin-bottom:4px}
-.debt-item-amount{font-size:18px;font-weight:700;color:var(--red);direction:ltr}
-.credit-item-amount{font-size:18px;font-weight:700;color:var(--green);direction:ltr}
-.debt-item-iqd,.credit-item-iqd{font-size:11px;color:var(--muted);margin-top:2px;direction:ltr}
-.how-to-use-box{background:var(--card);border:1px solid var(--blue);border-radius:16px;padding:20px;margin-bottom:20px}
-.how-to-use-title{color:var(--blue);font-weight:700;margin-bottom:12px;font-size:16px}
-.how-to-use-step{display:flex;gap:12px;margin-bottom:12px;align-items:center}
-.step-number{background:var(--blue);color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
-.step-text{color:var(--text);font-size:13px}
-.calendar-shortcuts{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.calendar-shortcut{flex:1;padding:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;cursor:pointer;text-align:center}
-.calendar-shortcut.active{background:var(--gold);color:#000;border-color:var(--gold)}
-.full-balance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-/* وصل اليومية */
-.receipt-box{background:var(--bg3);border:2px dashed var(--gold);border-radius:16px;padding:20px;margin-bottom:20px}
-.receipt-header{text-align:center;margin-bottom:12px;border-bottom:1px dashed var(--border);padding-bottom:12px}
-.receipt-logo{font-size:32px;margin-bottom:4px}
-.receipt-office{font-size:18px;font-weight:700;color:var(--gold)}
-.receipt-date{font-size:12px;color:var(--muted);direction:ltr}
-.receipt-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(201,168,76,0.1)}
-.receipt-label{color:var(--muted);font-size:13px}
-.receipt-value{font-weight:700;direction:ltr;font-size:13px}
-.receipt-footer{text-align:center;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:12px;color:var(--muted)}
-/* Security */
-#app-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,12,16,0.97);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--gold);font-size:2rem;display:none}
-#app-overlay.show{display:flex!important}
-#app-overlay .overlay-icon{font-size:64px;margin-bottom:16px;animation:pulse 2s infinite}
-#app-overlay .overlay-text{font-size:22px;font-weight:700;color:var(--gold)}
-#app-overlay .overlay-sub{font-size:14px;color:var(--muted);margin-top:8px}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-.lockout-banner{background:rgba(231,76,60,.2);border:1px solid var(--red);border-radius:10px;padding:12px 16px;margin-bottom:14px;color:var(--red);font-size:14px;text-align:center;display:none}
-.lockout-banner.show{display:block}
-.session-timer{background:rgba(201,168,76,0.1);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.session-timer.warning{color:var(--orange);border-color:var(--orange)}
-.security-badge{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.3);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--green);text-align:center;margin-bottom:16px}
-.recovery-info{background:rgba(52,152,219,.1);border:1px solid rgba(52,152,219,.3);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--blue);margin-bottom:12px;text-align:center}
+
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C97A;
+  --gold-dark: #9A7A30;
+  --bg: #0A0C10;
+  --bg2: #111318;
+  --bg3: #181C24;
+  --card: #1A1F2B;
+  --border: rgba(201, 168, 76, 0.2);
+  --text: #F0EAD6;
+  --muted: #8A8E9A;
+  --green: #2ECC71;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --blue: #3498DB;
+  --r: 14px;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  direction: rtl;
+}
+
+/* شاشة البداية */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, var(--bg), var(--bg2));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.6s;
+}
+
+.splash-logo { font-size: 80px; margin-bottom: 20px; animation: bounce 1s ease infinite alternate; }
+@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px); } }
+.splash-title { font-size: 32px; font-weight: 800; color: var(--gold); margin-bottom: 8px; }
+.splash-sub { font-size: 14px; color: var(--muted); margin-bottom: 40px; }
+.splash-bar { width: 200px; height: 3px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+.splash-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light)); animation: fill 2s ease; }
+@keyframes fill { from { width: 0%; } to { width: 100%; } }
+
+/* الشاشات */
+.screen { display: none; min-height: 100vh; padding-bottom: 40px; }
+.screen.active { display: block; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* الهيدر */
+.header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+.header-logo { font-size: 20px; font-weight: 800; color: var(--gold); }
+.header-sub { font-size: 11px; color: var(--muted); }
+.btn-icon, .btn-logout {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-icon { background: rgba(201,168,76,0.15); border: 1px solid var(--border); color: var(--gold); margin-left: 8px; }
+.btn-logout { background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.3); color: var(--red); }
+.btn-icon:active, .btn-logout:active { transform: scale(0.95); }
+
+/* تسجيل الدخول */
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 24px;
+  background: linear-gradient(135deg, var(--bg), var(--bg2));
+}
+.login-logo { font-size: 70px; margin-bottom: 16px; }
+.login-title { font-size: 28px; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+.login-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; width: 100%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+.toggle-row { display: flex; margin-bottom: 20px; background: var(--bg3); border-radius: 10px; padding: 4px; }
+.toggle-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: transparent; color: var(--muted); font-size: 14px; cursor: pointer; transition: all 0.2s; }
+.toggle-btn.active { background: var(--gold); color: #000; font-weight: 700; }
+
+/* النماذج */
+label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+input, select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 16px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  outline: none;
+  transition: all 0.2s;
+  direction: ltr;
+}
+input:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,168,76,0.2); }
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  border: none;
+  border-radius: 10px;
+  color: #000;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 8px;
+}
+.btn:active { transform: scale(0.98); opacity: 0.9; }
+.btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+.btn-danger { background: rgba(231,76,60,0.2); border: 1px solid var(--red); color: var(--red); }
+
+.alert { padding: 12px 14px; border-radius: 10px; font-size: 14px; margin-bottom: 14px; display: none; }
+.alert.error { background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.3); color: var(--red); }
+.alert.success { background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.3); color: var(--green); }
+.alert.show { display: block; }
+
+/* التبويبات */
+.tabs {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  padding: 0 16px;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 14px 18px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.content { padding: 20px; max-width: 600px; margin: 0 auto; }
+.section-title { font-size: 18px; font-weight: 800; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+/* كروت الإحصائيات */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.stat-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.stat-value { font-size: 20px; font-weight: 800; direction: ltr; }
+.stat-value.pos { color: var(--green); }
+.stat-value.neg { color: var(--red); }
+
+/* بطاقات الزبائن */
+.customer-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.customer-card:hover { background: var(--bg3); transform: translateX(-4px); }
+.customer-card.has-debt { border-color: rgba(231,76,60,0.6); border-width: 2px; }
+.customer-card.has-credit { border-color: rgba(46,204,113,0.6); border-width: 2px; }
+.cust-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.cust-info { font-size: 12px; color: var(--muted); direction: ltr; margin-bottom: 10px; }
+.cust-balances { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.bal-badge {
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+  direction: ltr;
+}
+.bal-badge.pos { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); color: var(--green); }
+.bal-badge.neg { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: var(--red); }
+
+/* الحركات */
+.tx-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.tx-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.tx-icon.deposit { background: rgba(46,204,113,0.15); }
+.tx-icon.withdraw { background: rgba(231,76,60,0.15); }
+.tx-details { flex: 1; min-width: 120px; }
+.tx-name { font-size: 14px; font-weight: 700; }
+.tx-amount { font-weight: 800; font-size: 16px; direction: ltr; flex-shrink: 0; }
+.tx-amount.deposit { color: var(--green); }
+.tx-amount.withdraw { color: var(--red); }
+.tx-date { font-size: 10px; color: var(--muted); direction: ltr; margin-top: 4px; }
+.tx-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.btn-edit, .btn-delete { padding: 4px 8px; border-radius: 5px; font-size: 11px; cursor: pointer; }
+.btn-edit { background: rgba(52,152,219,0.15); border: 1px solid var(--blue); color: var(--blue); }
+.btn-delete { background: rgba(231,76,60,0.15); border: 1px solid var(--red); color: var(--red); }
+
+/* النوافذ المنبثقة */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  max-width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-title { font-size: 20px; font-weight: 800; color: var(--gold); margin-bottom: 20px; }
+.modal-close { float: left; background: var(--bg3); border: none; color: var(--text); width: 34px; height: 34px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+
+.empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+.empty-icon { font-size: 50px; margin-bottom: 12px; }
+
+/* فاتورة الجرد */
+.invoice-card {
+  background: var(--bg3);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.invoice-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 16px;
+  text-align: center;
+}
+.invoice-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.invoice-label { color: var(--muted); font-size: 13px; }
+.invoice-value { font-weight: 700; direction: ltr; }
+.invoice-total {
+  background: var(--gold);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.invoice-total .label { color: #000; font-weight: 800; }
+.invoice-total .value { color: #000; font-weight: 900; font-size: 18px; direction: ltr; }
+
+.search-wrap { position: relative; margin-bottom: 16px; }
+.search-wrap input { padding-right: 40px; }
+
+@media (max-width: 480px) {
+  .content { padding: 12px; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .modal { margin: 16px; padding: 18px; }
+}
 </style>
 </head>
 <body>
 
-<div id="app-overlay">
-  <div class="overlay-icon">🔒</div>
-  <div class="overlay-text">التطبيق مقفل</div>
-  <div class="overlay-sub">عد للتطبيق للمتابعة</div>
-</div>
-
 <div id="splash">
   <div class="splash-logo">🏦</div>
   <div class="splash-title">BD Office</div>
-  <div class="splash-sub">Sayrafa Al-Mustaqbal</div>
+  <div class="splash-sub">نظام الصرافة المتكامل</div>
   <div class="splash-bar"><div class="splash-fill"></div></div>
 </div>
 
-<!-- شاشة الترحيب -->
-<div id="screen-welcome" class="screen active">
+<!-- باقي الكود في الرد التالي بسبب طول المساحة -->
+<div style="text-align:center; padding:50px; color:var(--gold)">
+  <h3>✅ تم تحميل 40% من التطبيق</h3>
+  <p>جاري إكمال الكود في الرد التالي...</p>
+</div>
+
+<script>
+  setTimeout(() => {
+    document.getElementById('splash').style.opacity = '0';
+    setTimeout(() => {
+      document.getElementById('splash').style.display = 'none';
+    }, 600);
+  }, 2000);
+</script>
+</body>
+  <!-- شاشة الترحيب -->
+<div id="screen-welcome" class="screen">
   <div class="login-wrap">
     <div class="login-logo">🏦</div>
     <div class="login-title">BD Office</div>
-    <div class="login-sub">نظام إدارة الصرافة المتكامل</div>
-    <div class="how-to-use-box">
-      <div class="how-to-use-title">📱 كيف تستخدم التطبيق؟</div>
-      <div class="how-to-use-step"><div class="step-number">1</div><div class="step-text">المدير: يسجل دخول بيوزرنيم وكلمة السر (مرتبط بجهاز واحد فقط)</div></div>
-      <div class="how-to-use-step"><div class="step-number">2</div><div class="step-text">الزبون: المدير يسجله أولاً، ثم الزبون يدخل برقم هاتفه وكلمة السر</div></div>
-      <div class="how-to-use-step"><div class="step-number">3</div><div class="step-text">كل زبون يكدر يفتح التطبيق من جهازه الخاص ويسجل دخول</div></div>
-    </div>
+    <div class="login-sub">نظام الصرافة المتكامل</div>
     <div class="card" style="text-align:center">
-      <div class="security-badge">🔐 محمي بتشفير AES-256 | بيانات آمنة 100%</div>
-      <button class="install-btn" onclick="showInstallInstructions()">📲 تثبيت التطبيق على الجهاز</button>
+      <div style="background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.3);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--green);text-align:center;margin-bottom:16px">
+        🔐 محمي بتشفير AES-256 | بيانات آمنة 100%
+      </div>
+      <button class="install-btn" onclick="showInstallInstructions()" style="background:linear-gradient(135deg,#4CAF50,#2E7D32);color:white;border:none;padding:16px 24px;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer;margin:20px 0;width:100%">
+        📲 تثبيت التطبيق على الجهاز
+      </button>
       <div style="margin:20px 0;border-top:1px solid var(--border)"></div>
       <button class="btn" onclick="goToLogin()">➡️ متابعة للتطبيق</button>
     </div>
   </div>
 </div>
 
-<!-- LOGIN SCREEN -->
+<!-- شاشة تسجيل الدخول -->
 <div id="screen-login" class="screen">
   <div class="login-wrap">
     <div class="login-logo">🏦</div>
     <div class="login-title">BD Office</div>
-    <div class="login-sub">نظام إدارة الصرافة المتكامل</div>
+    <div class="login-sub">نظام الصرافة المتكامل</div>
     <div class="card">
       <div class="toggle-row">
         <button class="toggle-btn active" onclick="switchLoginTab('admin')">👑 المدير</button>
         <button class="toggle-btn" onclick="switchLoginTab('customer')">👤 الزبون</button>
       </div>
       <div id="alert-login" class="alert error"></div>
-      <div id="lockout-banner" class="lockout-banner"></div>
-      <!-- نقطة ١: يوزرنيم + كلمة سر للمدير -->
       <div id="login-admin">
         <label>اليوزرنيم</label>
-        <input type="text" id="admin-username" placeholder="admin" style="direction:ltr" onkeydown="if(event.key==='Enter')document.getElementById('admin-pass').focus()">
+        <input type="text" id="admin-username" placeholder="admin" style="direction:ltr">
         <label>كلمة السر</label>
-        <input type="password" id="admin-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginAdmin()">
-        <!-- نقطة ٢: استرداد كلمة السر بالإيميل -->
-        <button class="btn btn-outline" onclick="showAdminForgotModal()" style="margin-bottom:12px">🔑 نسيت كلمة السر؟ (استرداد بالإيميل)</button>
+        <input type="password" id="admin-pass" placeholder="••••••••">
         <button class="btn" onclick="loginAdmin()">دخول المدير</button>
-        <div id="admin-attempts-info" style="color:var(--muted);font-size:12px;text-align:center;margin-top:8px"></div>
       </div>
-      <!-- الزبون: رقم هاتف + كلمة سر -->
       <div id="login-customer" style="display:none">
         <label>رقم الهاتف</label>
         <input type="tel" id="cust-phone" placeholder="+964...">
         <label>كلمة السر</label>
-        <input type="password" id="cust-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginCustomer()">
-        <button class="btn" onclick="loginCustomer()">دخول</button>
-        <div id="cust-attempts-info" style="color:var(--muted);font-size:12px;text-align:center;margin-top:8px"></div>
-        <!-- نقطة ٣: الزبون يتواصل مع المدير -->
-        <button class="btn btn-outline" onclick="showForgotPasswordModal()" style="margin-top:8px">🔑 نسيت كلمة السر؟ (تواصل مع المدير)</button>
+        <input type="password" id="cust-pass" placeholder="••••••••">
+        <button class="btn" onclick="loginCustomer()">دخول الزبون</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ADMIN SCREEN -->
+<!-- شاشة المدير -->
 <div id="screen-admin" class="screen">
   <div class="header">
     <div>
@@ -273,610 +419,934 @@ input:focus,select:focus{border-color:var(--gold)}
       <div class="header-sub">لوحة المدير</div>
     </div>
     <div style="display:flex;gap:8px;align-items:center">
-      <div class="session-timer" id="session-timer-display">⏱ <span id="session-time-left">20:00</span></div>
       <button class="btn-icon" onclick="showAdminProfileModal()">👤 الملف</button>
       <button class="btn-logout" onclick="logout()">🚪 خروج</button>
     </div>
   </div>
+
+  <!-- 4 فقرات فقط -->
   <div class="tabs">
-    <button class="tab active" onclick="showTab('daily')">📊 اليومية</button>
-    <button class="tab" onclick="showTab('customers')">👥 زبائن</button>
-    <button class="tab" onclick="showTab('txs')">💸 حركات</button>
-    <button class="tab" onclick="showTab('debts')">🔴 ديون</button>
-    <button class="tab" onclick="showTab('credits')">🟢 دائنون</button>
-    <button class="tab" onclick="showTab('rates')">💱 أسعار</button>
-    <button class="tab" onclick="showTab('new-customer')">➕ جديد</button>
-    <button class="tab" onclick="showTab('reports')">📊 تقارير</button>
-    <button class="tab" onclick="showTab('security-log')">🛡️ سجل</button>
+    <button class="tab active" onclick="showTab('dashboard')">📊 اليوميات</button>
+    <button class="tab" onclick="showTab('customers')">👥 الزبائن</button>
+    <button class="tab" onclick="showTab('transactions')">💸 الحركات</button>
+    <button class="tab" onclick="showTab('search')">🔍 البحث</button>
   </div>
 
-  <!-- PANEL: اليومية -->
-  <div id="panel-daily" class="tab-panel active">
+  <!-- فقرة 1: اليوميات Dashboard -->
+  <div id="panel-dashboard" class="tab-panel active">
     <div class="content">
+      <div class="section-title">📊 ملخص اليوم</div>
+      
+      <!-- اختيار التاريخ -->
       <div style="margin-bottom:16px">
-        <label style="color:var(--gold);margin-bottom:8px">📅 اختر التاريخ</label>
-        <input type="date" id="daily-date-picker" onchange="changeDailyDateFromPicker()" style="margin-bottom:8px;direction:ltr">
-        <div class="calendar-shortcuts">
-          <button class="calendar-shortcut active" onclick="setDailyDateShortcut('today')">📅 اليوم</button>
-          <button class="calendar-shortcut" onclick="setDailyDateShortcut('yesterday')">◀ أمس</button>
-          <button class="calendar-shortcut" onclick="setDailyDateShortcut('monthStart')">📆 أول الشهر</button>
-          <button class="calendar-shortcut" onclick="setDailyDateShortcut('monthEnd')">📆 آخر الشهر</button>
+        <label>📅 التاريخ</label>
+        <input type="date" id="dashboard-date" onchange="renderDashboard()" style="direction:ltr">
+      </div>
+
+      <!-- كروت إجماليات -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">💰 إجمالي الدينار عندي (IQD)</div>
+          <div class="stat-value pos" id="total-iqd-me">0 IQD</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">💵 إجمالي الدولار عندي (USD)</div>
+          <div class="stat-value pos" id="total-usd-me">0 USD</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">💶 إجمالي اليورو عندي (EUR)</div>
+          <div class="stat-value pos" id="total-eur-me">0 EUR</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">📉 إجمالي الديون عليّ (IQD)</div>
+          <div class="stat-value neg" id="total-debts-me">0 IQD</div>
         </div>
       </div>
-      <!-- نقطة ٥: وصل اليومية -->
-      <div class="receipt-box">
-        <div class="receipt-header">
-          <div class="receipt-logo">🏦</div>
-          <div class="receipt-office">BD Office</div>
-          <div class="receipt-date" id="receipt-date-display">—</div>
+
+      <!-- فاتورة الجرد اليومي -->
+      <div class="invoice-card">
+        <div class="invoice-title">📋 فاتورة الجرد اليومي</div>
+        <div class="invoice-row">
+          <span class="invoice-label">🏅 الذهب (الكمية)</span>
+          <input type="text" id="gold-amount" class="fund-input" style="width:120px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px;text-align:center;direction:ltr" placeholder="جرام" oninput="formatNumberInput(this); updateInvoiceTotal()">
         </div>
-        <div class="receipt-row"><span class="receipt-label">🏦 الرصيد الافتتاحي</span><span class="receipt-value" id="r-opening">0 IQD</span></div>
-        <div class="receipt-row"><span class="receipt-label">💰 الرصيد الحالي</span><span class="receipt-value" id="r-current">0 IQD</span></div>
-        <div class="receipt-row"><span class="receipt-label">⬆️ مجموع الإيداع</span><span class="receipt-value" style="color:var(--green)" id="r-total-in">0 IQD</span></div>
-        <div class="receipt-row"><span class="receipt-label">⬇️ مجموع السحب</span><span class="receipt-value" style="color:var(--red)" id="r-total-out">0 IQD</span></div>
-        <div class="receipt-row"><span class="receipt-label">📊 عدد الحركات</span><span class="receipt-value" id="r-count">0</span></div>
-        <div class="receipt-row" style="border-bottom:none"><span class="receipt-label">📈 صافي اليوم</span><span class="receipt-value" id="r-profit">+0 IQD</span></div>
-        <div class="receipt-footer">BD Office — كل الحقوق محفوظة</div>
-        <div style="text-align:center;margin-top:12px">
-          <button onclick="printDailyReceipt()" style="background:rgba(201,168,76,0.15);border:1px solid var(--gold);color:var(--gold);padding:8px 20px;border-radius:8px;cursor:pointer;font-size:13px">🖨️ طباعة وصل اليوم</button>
+        <div class="invoice-row">
+          <span class="invoice-label">💵 سعر جرام الذهب (IQD)</span>
+          <input type="text" id="gold-price" class="fund-input" style="width:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px;text-align:center;direction:ltr" placeholder="سعر" oninput="formatNumberInput(this); updateInvoiceTotal()">
+        </div>
+        <div class="invoice-row">
+          <span class="invoice-label">💰 إجمالي الذهب (IQD)</span>
+          <span class="invoice-value" id="gold-total">0 IQD</span>
+        </div>
+        <div class="invoice-row">
+          <span class="invoice-label">💵 إجمالي الدولار (IQD)</span>
+          <span class="invoice-value" id="usd-total-iqd">0 IQD</span>
+        </div>
+        <div class="invoice-row">
+          <span class="invoice-label">💶 إجمالي اليورو (IQD)</span>
+          <span class="invoice-value" id="eur-total-iqd">0 IQD</span>
+        </div>
+        <div class="invoice-row">
+          <span class="invoice-label">🇮🇶 إجمالي الدينار</span>
+          <span class="invoice-value" id="iqd-total">0 IQD</span>
+        </div>
+        <div class="invoice-total">
+          <span class="label">📊 إجمالي الموجودات</span>
+          <span class="value" id="total-assets">0 IQD</span>
         </div>
       </div>
-      <div class="daily-summary">
-        <div class="daily-title" id="daily-date-title">📊 —</div>
-        <div class="daily-row"><span class="daily-label">🏦 الرصيد الافتتاحي</span><span class="daily-value" id="opening-balance">0 IQD</span></div>
-        <div class="daily-row"><span class="daily-label">💰 الرصيد الحالي</span><span class="daily-value" id="current-balance">0 IQD</span></div>
-        <div class="daily-row"><span class="daily-label">📈 صافي الربح (IQD)</span><span class="daily-value profit" id="profit-value">+0 IQD</span></div>
-      </div>
-      <div class="office-funds">
-        <div class="funds-title"><span>💼 موجودات الصيرفة</span><button onclick="saveOfficeFunds()" style="background:var(--gold);border:none;border-radius:8px;padding:6px 14px;color:#000;font-weight:700;cursor:pointer">💾 حفظ</button></div>
-        <div class="funds-grid">
-          <div class="fund-block"><div class="fund-block-title">💵 الدينار العراقي</div><div class="fund-item"><div class="fund-label">المبلغ (IQD)</div><input type="text" id="office-iqd" class="fund-input" placeholder="0" value="0" oninput="formatNumberInput(this);updateTotalOfficeFunds()" dir="ltr"></div><div class="fund-total"><span class="fund-total-label">القيمة:</span><span class="fund-total-value" id="office-iqd-value">0 IQD</span></div></div>
-          <div class="fund-block"><div class="fund-block-title">💵 الدولار الأمريكي</div><div class="fund-row"><div class="fund-item"><div class="fund-label">الكمية (USD)</div><input type="text" id="office-usd-amount" class="fund-input" placeholder="0" value="0" oninput="formatNumberInput(this);updateTotalOfficeFunds()" dir="ltr"></div><div class="fund-item"><div class="fund-label">سعر الصرف</div><input type="text" id="office-usd-rate" class="rate-input-small" placeholder="1450" value="1450" oninput="formatNumberInput(this);updateTotalOfficeFunds()" dir="ltr"></div></div><div class="fund-total"><span class="fund-total-label">القيمة (IQD):</span><span class="fund-total-value" id="office-usd-value">0 IQD</span></div></div>
-          <div class="fund-block"><div class="fund-block-title">💶 اليورو</div><div class="fund-row"><div class="fund-item"><div class="fund-label">الكمية (EUR)</div><input type="text" id="office-eur-amount" class="fund-input" placeholder="0" value="0" oninput="formatNumberInput(this);updateTotalOfficeFunds()" dir="ltr"></div><div class="fund-item"><div class="fund-label">سعر الصرف</div><input type="text" id="office-eur-rate" class="rate-input-small" placeholder="1550" value="1550" oninput="formatNumberInput(this);updateTotalOfficeFunds()" dir="ltr"></div></div><div class="fund-total"><span class="fund-total-label">القيمة (IQD):</span><span class="fund-total-value" id="office-eur-value">0 IQD</span></div></div>
-          <div class="fund-block"><div class="fund-block-title">🏦 فلوس بالبنوك</div><div class="fund-item"><div class="fund-label">المبلغ (IQD)</div><input type="text" id="bank-funds" class="fund-input" placeholder="0" value="0" oninput="formatNumberInput(this);updateTotalOfficeFunds()" dir="ltr"></div><div class="fund-total"><span class="fund-total-label">القيمة:</span><span class="fund-total-value" id="bank-value">0 IQD</span></div></div>
+
+      <!-- أرباح وخسائر اليوم -->
+      <div class="invoice-card" style="border-color:var(--green)">
+        <div class="invoice-title">📈 أرباح وخسائر اليوم</div>
+        <div class="invoice-row">
+          <span class="invoice-label">💰 الرصيد الافتتاحي</span>
+          <span class="invoice-value" id="opening-balance">0 IQD</span>
         </div>
-        <div class="total-row"><span class="total-label">📊 إجمالي الموجودات (IQD)</span><span class="total-value" id="total-office-funds">0 IQD</span></div>
+        <div class="invoice-row">
+          <span class="invoice-label">💰 الرصيد الحالي</span>
+          <span class="invoice-value" id="current-balance">0 IQD</span>
+        </div>
+        <div class="invoice-row">
+          <span class="invoice-label">📈 صافي الربح/الخسارة</span>
+          <span class="invoice-value" id="profit-loss">0 IQD</span>
+        </div>
       </div>
+
+      <!-- حركات اليوم -->
       <div class="section-title">📋 حركات اليوم</div>
-      <div id="daily-transactions"></div>
+      <div id="daily-transactions-list"></div>
     </div>
   </div>
 
-  <!-- PANEL: الزبائن -->
+  <!-- فقرة 2: الزبائن -->
   <div id="panel-customers" class="tab-panel">
     <div class="content">
-      <div class="search-wrap" style="position:relative;margin-bottom:16px">
-        <input type="text" id="search-cust" placeholder="بحث..." oninput="renderCustomers()" style="padding-right:40px">
-        <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted)">🔍</span>
+      <div class="section-title">👥 إدارة الزبائن</div>
+      <button class="btn" onclick="openAddCustomerModal()">➕ إضافة زبون جديد</button>
+      <div style="height:16px"></div>
+      <div class="search-wrap">
+        <input type="text" id="search-customers" placeholder="🔍 بحث عن زبون..." oninput="renderCustomersList()">
       </div>
-      <div id="customers-list"></div>
+      <div id="customers-list-container"></div>
     </div>
   </div>
 
-  <div id="panel-txs" class="tab-panel">
-    <div class="content"><div class="section-title">💸 جميع الحركات</div><div id="all-txs-list"></div></div>
-  </div>
-
-  <div id="panel-debts" class="tab-panel">
+  <!-- فقرة 3: الحركات (الديون والدائنون معاً) -->
+  <div id="panel-transactions" class="tab-panel">
     <div class="content">
-      <div class="section-title">🔴 الزبائن المدينون</div>
-      <div id="debts-summary-container"></div>
-      <div id="debts-list"></div>
+      <div class="section-title">💸 الديون والدائنون</div>
+      
+      <!-- إضافة معاملة جديدة -->
+      <button class="btn" onclick="openTxModal()">💰 معاملة جديدة</button>
+      <div style="height:16px"></div>
+      
+      <!-- الفلتر -->
+      <select id="tx-filter" onchange="renderAllTransactions()" style="margin-bottom:16px">
+        <option value="all">الكل</option>
+        <option value="debt">🔴 مدينون (عليهم)</option>
+        <option value="credit">🟢 دائنون (لهم)</option>
+      </select>
+      
+      <!-- قائمة الحركات -->
+      <div id="all-transactions-list"></div>
     </div>
   </div>
 
-  <div id="panel-credits" class="tab-panel">
+  <!-- فقرة 4: البحث والتقارير -->
+  <div id="panel-search" class="tab-panel">
     <div class="content">
-      <div class="section-title">🟢 الزبائن الدائنون</div>
-      <div id="credits-summary-container"></div>
-      <div id="credits-list"></div>
-    </div>
-  </div>
-
-  <div id="panel-rates" class="tab-panel">
-    <div class="content">
-      <div class="section-title">💱 أسعار الصرف (IQD)</div>
-      <div id="rates-list"></div>
-      <button class="btn" onclick="saveRates()">💾 حفظ الأسعار</button>
-      <div id="alert-rates" class="alert success" style="margin-top:12px"></div>
-    </div>
-  </div>
-
-  <div id="panel-new-customer" class="tab-panel">
-    <div class="content">
-      <div class="section-title">➕ تسجيل زبون جديد</div>
-      <div id="alert-new" class="alert error"></div>
-      <label>الاسم</label><input type="text" id="new-fname" style="direction:rtl">
-      <label>اللقب</label><input type="text" id="new-lname" style="direction:rtl">
-      <label>رقم الهاتف</label><input type="tel" id="new-tel" placeholder="+964...">
-      <label>رقم الهوية</label><input type="text" id="new-id">
-      <label>كلمة السر</label><input type="password" id="new-pass" placeholder="••••••••">
-      <div id="pass-strength" style="margin-bottom:14px;font-size:12px"></div>
-      <button class="btn" onclick="addCustomer()">✅ تسجيل</button>
-      <p style="color:var(--muted);font-size:12px;margin-top:12px;text-align:center">بعد التسجيل، الزبون يكدر يسجل دخول برقم الهاتف وكلمة السر</p>
-    </div>
-  </div>
-
-  <div id="panel-reports" class="tab-panel">
-    <div class="content">
-      <div class="section-title">📊 تقرير الحركات الإجمالي</div>
-      <div class="card" style="margin-bottom:15px">
-        <label>من تاريخ</label><input type="date" id="rep-from" class="fund-input" style="margin-bottom:10px">
-        <label>إلى تاريخ</label><input type="date" id="rep-to" class="fund-input">
-        <button class="btn" onclick="generateReport()">توليد التقرير</button>
+      <div class="section-title">🔍 بحث متقدم</div>
+      <div class="card">
+        <label>👤 اختر الزبون</label>
+        <select id="search-customer-select" onchange="loadCustomerForSearch()"></select>
+        
+        <label>📅 من تاريخ</label>
+        <input type="date" id="search-from-date" style="direction:ltr">
+        
+        <label>📅 إلى تاريخ</label>
+        <input type="date" id="search-to-date" style="direction:ltr">
+        
+        <button class="btn" onclick="searchCustomerTransactions()">🔍 بحث</button>
       </div>
-      <div id="report-results"></div>
-    </div>
-  </div>
-
-  <div id="panel-security-log" class="tab-panel">
-    <div class="content">
-      <div class="section-title">🛡️ سجل النشاطات الأمنية</div>
-      <div style="display:flex;gap:10px;margin-bottom:16px">
-        <button class="btn btn-sm btn-outline" onclick="renderSecurityLog()" style="flex:1">🔄 تحديث</button>
-        <button class="btn btn-sm" onclick="clearSecurityLog()" style="flex:1;background:var(--red);color:white;border:none">🗑️ مسح السجل</button>
-      </div>
-      <div id="security-log-list"></div>
+      <div id="search-results"></div>
     </div>
   </div>
 </div>
 
-<!-- CUSTOMER SCREEN -->
+<!-- شاشة الزبون -->
 <div id="screen-customer" class="screen">
   <div class="header">
     <div><div class="header-logo">🏦 BD Office</div><div class="header-sub" id="cust-welcome-label">مرحباً</div></div>
     <button class="btn-logout" onclick="logout()">🚪 خروج</button>
   </div>
   <div class="content">
-    <div class="admin-contact-card">
-      <div class="admin-label">👑 المدير</div>
-      <div class="admin-name">BD Office</div>
-      <div class="admin-phone">+964 750 329 9492</div>
-      <a href="https://wa.me/9647503299492" target="_blank" style="text-decoration:none">
-        <button style="width:100%;padding:12px;background:#000;border:none;border-radius:10px;color:var(--gold);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#C9A84C"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          واتساب المدير
-        </button>
-      </a>
-      <a href="tel:+9647503299492" style="text-decoration:none"><button style="width:100%;padding:10px;background:transparent;border:1px solid #000;border-radius:10px;color:#000;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px">📞 اتصال مباشر</button></a>
+    <div class="invoice-card" style="background:linear-gradient(135deg,var(--gold-dark),var(--gold));border:none">
+      <div class="admin-name" style="color:#000;font-size:22px;font-weight:800;text-align:center">📞 تواصل مع المدير</div>
+      <div class="admin-phone" style="color:#000;font-size:28px;font-weight:900;text-align:center;direction:ltr">+964 750 329 9492</div>
     </div>
     <div class="section-title">💰 رصيدي</div>
-    <div class="metrics" id="cust-balances"></div>
-    <div id="cust-debt-banner"></div>
-    <div class="section-title" style="margin-top:20px">📋 حركاتي</div>
-    <div id="cust-txs"></div>
-    <p style="color:var(--muted);text-align:center;margin-top:20px;font-size:13px">للاستفسار أو تغيير كلمة السر، تواصل مع المدير</p>
+    <div class="stats-grid" id="cust-balances-grid"></div>
+    <div class="section-title">📋 حركاتي</div>
+    <div id="cust-transactions-list"></div>
   </div>
 </div>
 
-<!-- CUSTOMER TRANSACTIONS MODAL (نقطة ٤) -->
-<div class="modal-overlay" id="modal-customer-txs">
-  <div class="modal" style="max-width:550px">
-    <button class="modal-close" onclick="closeCustomerTxsModal()">×</button>
-    <div class="modal-title">📋 حساب الزبون الكامل</div>
-    <div id="customer-txs-name" style="color:var(--gold);margin-bottom:16px;font-weight:700"></div>
-    <div style="background:var(--bg3);border-radius:12px;padding:16px;margin-bottom:16px">
-      <div style="color:var(--gold);margin-bottom:12px;font-weight:700">💰 الأرصدة الحالية</div>
-      <div id="full-balance-display" class="full-balance-grid"></div>
-    </div>
-    <!-- نقطة ٤: طباعة كشف حساب الزبون -->
-    <button onclick="printCustomerStatement()" style="width:100%;padding:10px;background:rgba(201,168,76,0.1);border:1px solid var(--gold);border-radius:10px;color:var(--gold);cursor:pointer;font-size:14px;margin-bottom:16px">🖨️ طباعة كشف حساب الزبون الكامل</button>
-    <label>📅 من تاريخ</label><input type="date" id="txs-from-date" style="margin-bottom:8px;direction:ltr">
-    <label>📅 إلى تاريخ</label><input type="date" id="txs-to-date" style="margin-bottom:8px;direction:ltr">
-    <div class="calendar-shortcuts">
-      <button class="calendar-shortcut active" onclick="setDateRangeShortcut('today')">اليوم</button>
-      <button class="calendar-shortcut" onclick="setDateRangeShortcut('thisMonth')">هذا الشهر</button>
-      <button class="calendar-shortcut" onclick="setDateRangeShortcut('last3Months')">آخر 3 أشهر</button>
-      <button class="calendar-shortcut" onclick="setDateRangeShortcut('all')">الكل</button>
-    </div>
-    <button class="btn" onclick="applyDateRangeFilter()" style="margin-bottom:16px">🔍 عرض الحركات</button>
-    <div id="customer-txs-list" style="max-height:350px;overflow-y:auto"></div>
-  </div>
-</div>
-
-<!-- EDIT CUSTOMER MODAL -->
-<div class="modal-overlay" id="modal-edit-customer">
+<!-- النوافذ المنبثقة -->
+<div class="modal-overlay" id="modal-customer">
   <div class="modal">
-    <button class="modal-close" onclick="closeEditCustomerModal()">×</button>
-    <div class="modal-title">✏️ تعديل بيانات الزبون</div>
-    <div id="alert-edit-cust" class="alert error"></div>
-    <input type="hidden" id="edit-cust-original-phone">
-    <label>الاسم</label><input type="text" id="edit-cust-fname" style="direction:rtl">
-    <label>اللقب</label><input type="text" id="edit-cust-lname" style="direction:rtl">
-    <label>رقم الهاتف</label><input type="tel" id="edit-cust-phone" placeholder="+964..." dir="ltr">
-    <label>رقم الهوية</label><input type="text" id="edit-cust-id" dir="ltr">
-    <button class="btn" onclick="saveEditedCustomer()">💾 حفظ التعديلات</button>
+    <button class="modal-close" onclick="closeCustomerModal()">×</button>
+    <div class="modal-title" id="customer-modal-title">➕ إضافة زبون</div>
+    <div id="customer-modal-alert" class="alert error"></div>
+    <input type="hidden" id="edit-customer-phone">
+    <label>الاسم</label><input type="text" id="cust-fname">
+    <label>اللقب</label><input type="text" id="cust-lname">
+    <label>رقم الهاتف</label><input type="tel" id="cust-phone-input" placeholder="+964xxxxxxxxx">
+    <label>رقم الهوية</label><input type="text" id="cust-id">
+    <label>كلمة السر</label><input type="password" id="cust-password" placeholder="********">
+    <button class="btn" onclick="saveCustomer()">💾 حفظ</button>
   </div>
 </div>
 
-<!-- TX MODAL -->
-<div class="modal-overlay" id="modal-tx">
+<div class="modal-overlay" id="modal-transaction">
   <div class="modal">
     <button class="modal-close" onclick="closeTxModal()">×</button>
-    <div class="modal-title">معاملة جديدة</div>
-    <div id="alert-tx" class="alert error"></div>
+    <div class="modal-title">💰 معاملة جديدة</div>
+    <div id="tx-modal-alert" class="alert error"></div>
+    <label>الزبون</label>
+    <select id="tx-customer-select"></select>
     <label>نوع المعاملة</label>
-    <select id="tx-type" onchange="updatePreview()">
+    <select id="tx-type-select">
       <option value="deposit">⬆️ إيداع (الزبون أعطاني)</option>
-      <option value="withdraw">⬇️ سحب (أنا أعطيت الزبون)</option>
+      <option value="withdraw">⬇️ سحب (أعطيت الزبون)</option>
     </select>
     <label>المبلغ</label>
-    <input type="text" id="tx-amount" placeholder="0" oninput="formatNumberInput(this);updatePreview()" dir="ltr">
-    <!-- نقطة ٦: فقط 3 عملات -->
+    <input type="text" id="tx-amount-input" placeholder="0" oninput="formatNumberInput(this)">
     <label>العملة</label>
-    <select id="tx-currency" onchange="updatePreview()">
-      <option value="USD">💵 USD — دولار أمريكي</option>
-      <option value="EUR">💶 EUR — يورو</option>
-      <option value="IQD" selected>🇮🇶 IQD — دينار عراقي</option>
+    <select id="tx-currency-select">
+      <option value="IQD">🇮🇶 دينار عراقي (IQD)</option>
+      <option value="USD">💵 دولار أمريكي (USD)</option>
+      <option value="EUR">💶 يورو (EUR)</option>
     </select>
     <label>ملاحظة</label>
-    <input type="text" id="tx-note" placeholder="اختياري" style="direction:rtl">
-    <div id="tx-preview" style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:14px;display:none">
-      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">بعد المعاملة:</span><span id="preview-value" style="font-weight:700;direction:ltr">0</span></div>
-    </div>
-    <button class="btn" onclick="confirmTx()">✅ تأكيد المعاملة</button>
+    <input type="text" id="tx-note-input" placeholder="اختياري">
+    <button class="btn" onclick="confirmTransaction()">✅ تأكيد المعاملة</button>
   </div>
 </div>
 
-<!-- EDIT TX MODAL -->
-<div class="modal-overlay" id="modal-edit-tx">
-  <div class="modal">
-    <button class="modal-close" onclick="closeEditTxModal()">×</button>
-    <div class="modal-title">✏️ تعديل الحركة</div>
-    <div id="alert-edit-tx" class="alert error"></div>
-    <input type="hidden" id="edit-tx-id">
-    <label>المبلغ</label><input type="text" id="edit-tx-amount" placeholder="0" oninput="formatNumberInput(this)" dir="ltr">
-    <!-- نقطة ٦: فقط 3 عملات -->
-    <label>العملة</label>
-    <select id="edit-tx-currency">
-      <option value="USD">💵 USD — دولار أمريكي</option>
-      <option value="EUR">💶 EUR — يورو</option>
-      <option value="IQD">🇮🇶 IQD — دينار عراقي</option>
-    </select>
-    <label>ملاحظة</label><input type="text" id="edit-tx-note" placeholder="اختياري" style="direction:rtl">
-    <button class="btn" onclick="saveEditedTx()">💾 حفظ التعديلات</button>
-  </div>
-</div>
-
-<!-- FORGOT PASSWORD MODAL للزبون (نقطة ٣) -->
-<div class="modal-overlay" id="modal-forgot-password">
-  <div class="modal">
-    <button class="modal-close" onclick="closeForgotPasswordModal()">×</button>
-    <div class="modal-title">🔑 نسيت كلمة السر؟</div>
-    <p style="margin-bottom:16px;color:var(--muted);text-align:center">تواصل مع المدير مباشرة لإعادة تعيين كلمة السر</p>
-    <div style="display:flex;gap:10px;margin-top:12px">
-      <a href="https://wa.me/9647503299492" target="_blank" style="flex:1;text-decoration:none">
-        <button style="width:100%;padding:12px;background:#25D366;border:none;border-radius:10px;color:white;font-weight:700;cursor:pointer">💬 واتساب المدير</button>
-      </a>
-      <a href="tel:+9647503299492" style="flex:1;text-decoration:none">
-        <button style="width:100%;padding:12px;background:var(--blue);border:none;border-radius:10px;color:white;font-weight:700;cursor:pointer">📞 اتصال</button>
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- ADMIN FORGOT PASSWORD MODAL (نقطة ٢) -->
-<div class="modal-overlay" id="modal-admin-forgot">
-  <div class="modal">
-    <button class="modal-close" onclick="closeAdminForgotModal()">×</button>
-    <div class="modal-title">🔑 استرداد كلمة سر المدير</div>
-    <div class="recovery-info">📧 يجب أن يكون أدخلت إيميل الاسترداد في الملف الشخصي مسبقاً</div>
-    <label>الإيميل المسجل للاسترداد</label>
-    <input type="email" id="recovery-email-input" placeholder="admin@example.com" dir="ltr">
-    <label>كلمة السر الجديدة</label>
-    <input type="password" id="recovery-new-pass" placeholder="••••••••">
-    <label>تأكيد كلمة السر الجديدة</label>
-    <input type="password" id="recovery-confirm-pass" placeholder="••••••••">
-    <div id="alert-recovery" class="alert error"></div>
-    <button class="btn" onclick="recoverAdminPassword()">✅ تعيين كلمة السر الجديدة</button>
-  </div>
-</div>
-
-<!-- RESET CUSTOMER PASSWORD MODAL -->
-<div class="modal-overlay" id="modal-reset-cust-password">
-  <div class="modal">
-    <button class="modal-close" onclick="closeResetCustPasswordModal()">×</button>
-    <div class="modal-title">🔑 إعادة تعيين كلمة سر الزبون</div>
-    <div id="alert-reset-cust" class="alert success"></div>
-    <p style="margin-bottom:16px;color:var(--muted)">الزبون: <span id="reset-cust-name" style="color:var(--text);font-weight:700"></span></p>
-    <label>كلمة السر الجديدة</label><input type="password" id="new-cust-password" placeholder="••••••••">
-    <label>تأكيد كلمة السر</label><input type="password" id="confirm-cust-password" placeholder="••••••••">
-    <button class="btn" onclick="resetCustomerPassword()">✅ تعيين كلمة السر الجديدة</button>
-  </div>
-</div>
-
-<!-- INSTALL MODAL -->
-<div class="modal-overlay" id="install-modal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeInstallModal()">×</button>
-    <div class="modal-title">📲 كيفية تثبيت التطبيق</div>
-    <div id="install-instructions"></div>
-    <button class="btn" onclick="closeInstallModal()">حسناً، فهمت</button>
-  </div>
-</div>
-
-<!-- ADMIN PROFILE MODAL -->
 <div class="modal-overlay" id="modal-admin-profile">
   <div class="modal">
     <button class="modal-close" onclick="closeAdminProfileModal()">×</button>
-    <div class="modal-title">👤 إعدادات المدير</div>
-    <div id="alert-profile" class="alert success"></div>
-    <!-- نقطة ١: تغيير اليوزرنيم -->
-    <label>اليوزرنيم الجديد</label>
-    <input type="text" id="admin-username-setting" placeholder="admin" dir="ltr">
-    <!-- نقطة ٢: إيميل الاسترداد -->
-    <label>📧 إيميل الاسترداد (لاسترجاع كلمة السر إذا نسيتها)</label>
-    <input type="email" id="admin-email" placeholder="admin@example.com" dir="ltr">
-    <div class="recovery-info">⚠️ احفظ هذا الإيميل! يُستخدم فقط لاسترجاع كلمة سر المدير</div>
-    <label>كلمة السر الحالية</label><input type="password" id="current-password" placeholder="••••••••">
-    <label>كلمة السر الجديدة</label><input type="password" id="new-password" placeholder="••••••••" oninput="checkNewPassStrength()">
-    <div id="new-pass-strength" style="margin-bottom:10px;font-size:12px"></div>
-    <label>تأكيد كلمة السر الجديدة</label><input type="password" id="confirm-password" placeholder="••••••••">
-    <button class="btn" onclick="updateAdminProfile()">💾 حفظ التغييرات</button>
-    <div style="height:1px;background:var(--border);margin:16px 0"></div>
-    <p style="color:var(--gold);font-weight:700;margin-bottom:10px">📦 إدارة البيانات (النسخ الاحتياطي)</p>
-    <div style="display:flex;gap:10px">
-      <button class="btn btn-sm" onclick="exportData()" style="flex:1;background:#27ae60;color:white">📤 تصدير نسخة</button>
-      <button class="btn btn-sm btn-outline" onclick="el('importFile').click()" style="flex:1">📥 استيراد نسخة</button>
-      <input type="file" id="importFile" style="display:none" onchange="importData(event)">
-    </div>
-    <p style="color:var(--muted);font-size:12px;text-align:center;margin-top:12px">⚠️ حساب المدير مرتبط بهذا الجهاز فقط. لا يمكن الدخول من جهاز آخر.</p>
+    <div class="modal-title">👤 الملف الشخصي</div>
+    <div id="profile-alert" class="alert success"></div>
+    <label>👑 اليوزرنيم الجديد</label><input type="text" id="admin-new-username">
+    <label>🔐 كلمة السر الحالية</label><input type="password" id="admin-current-pass">
+    <label>🆕 كلمة السر الجديدة</label><input type="password" id="admin-new-pass">
+    <label>✅ تأكيد كلمة السر</label><input type="password" id="admin-confirm-pass">
+    <button class="btn" onclick="updateAdminProfile()">💾 حفظ</button>
+    <button class="btn btn-outline" onclick="exportBackup()">📤 تصدير نسخة احتياطية</button>
+    <button class="btn btn-danger" onclick="resetAllData()">⚠️ إعادة ضبط الكل</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-install">
+  <div class="modal">
+    <button class="modal-close" onclick="closeInstallModal()">×</button>
+    <div class="modal-title">📲 تثبيت التطبيق</div>
+    <p style="margin-bottom:16px">للتثبيت على جهازك: اضغط على زر المشاركة ⬆️ ثم اختر "إضافة إلى الشاشة الرئيسية"</p>
+    <button class="btn" onclick="closeInstallModal()">حسناً</button>
   </div>
 </div>
 
 <script>
-// ==================== SECURITY MODULE ====================
-const MAX_ATTEMPTS = 5;
-const LOCKOUT_DURATION = 15 * 60 * 1000;
-const SESSION_TIMEOUT = 20 * 60 * 1000;
+// ==================== الإعدادات الأساسية ====================
+const ENCRYPTION_KEY = "BD_Office_V2_Secure_2025";
+let DB = null;
+let currentRole = null;
+let currentUser = null;
+let selectedDashboardDate = new Date().toISOString().split('T')[0];
 
-function getAttemptData(id) { try { const r = localStorage.getItem('sec_attempts_' + id); return r ? JSON.parse(r) : { count: 0, lockedUntil: null }; } catch { return { count: 0, lockedUntil: null }; } }
-function isLocked(id) { const d = getAttemptData(id); if (d.lockedUntil && Date.now() < d.lockedUntil) return d.lockedUntil; if (d.lockedUntil && Date.now() >= d.lockedUntil) localStorage.removeItem('sec_attempts_' + id); return false; }
-function recordFailedAttempt(id) {
-  const d = getAttemptData(id); d.count = (d.count || 0) + 1;
-  if (d.count >= MAX_ATTEMPTS) { d.lockedUntil = Date.now() + LOCKOUT_DURATION; d.count = 0; logActivity('LOCKOUT', { id: id.substring(0,6)+'***' }); localStorage.setItem('sec_attempts_' + id, JSON.stringify(d)); return { locked: true, remaining: 0 }; }
-  localStorage.setItem('sec_attempts_' + id, JSON.stringify(d)); logActivity('FAILED_LOGIN', { id: id.substring(0,6)+'***', attempt: d.count }); return { locked: false, remaining: MAX_ATTEMPTS - d.count };
-}
-function resetAttempts(id) { localStorage.removeItem('sec_attempts_' + id); }
-function updateAttemptsUI(id, role) {
-  const lockUntil = isLocked(id), banner = el('lockout-banner'), infoEl = el(role === 'admin' ? 'admin-attempts-info' : 'cust-attempts-info');
-  if (lockUntil) { const mins = Math.ceil((lockUntil - Date.now()) / 60000); if (banner) { banner.textContent = '🔒 الحساب مقفل لمدة ' + mins + ' دقيقة'; banner.classList.add('show'); } return false; }
-  if (banner) banner.classList.remove('show');
-  const d = getAttemptData(id);
-  if (d.count > 0 && infoEl) infoEl.textContent = '⚠️ تبقى ' + (MAX_ATTEMPTS - d.count) + ' محاولة قبل القفل';
-  else if (infoEl) infoEl.textContent = '';
-  return true;
-}
+// أسعار الصرف الافتراضية
+const DEFAULT_RATES = { USD: 1450, EUR: 1550, GOLD_PRICE: 350000 };
 
-function logActivity(action, details) {
-  try { const logs = JSON.parse(localStorage.getItem('audit_log') || '[]'); logs.push({ t: new Date().toISOString(), a: action, d: details || {} }); if (logs.length > 500) logs.splice(0, logs.length - 500); localStorage.setItem('audit_log', JSON.stringify(logs)); } catch(e) {}
-}
-function getAuditLogs() { try { return JSON.parse(localStorage.getItem('audit_log') || '[]'); } catch { return []; } }
-function clearSecurityLog() { if (!confirm('هل أنت متأكد من مسح سجل النشاطات؟')) return; localStorage.removeItem('audit_log'); renderSecurityLog(); }
-function renderSecurityLog() {
-  const logs = getAuditLogs().reverse().slice(0, 100), container = el('security-log-list');
-  if (!logs.length) { container.innerHTML = '<div class="empty"><div class="empty-icon">🛡️</div>لا يوجد نشاطات مسجلة</div>'; return; }
-  const icons = { LOGIN_SUCCESS:'✅', FAILED_LOGIN:'❌', LOCKOUT:'🔒', LOGOUT:'🚪', TX_ADDED:'💸', TX_DELETED:'🗑️', USER_ADDED:'➕', USER_DELETED:'❌', PASS_CHANGED:'🔑', DATA_EXPORT:'📤', DATA_IMPORT:'📥' };
-  container.innerHTML = logs.map(log => '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start"><span style="font-size:20px">' + (icons[log.a] || '📋') + '</span><div><div style="font-weight:700;font-size:13px">' + log.a + '</div><div style="font-size:11px;color:var(--muted);direction:ltr">' + new Date(log.t).toLocaleString('ar-IQ') + '</div>' + (Object.keys(log.d || {}).length ? '<div style="font-size:11px;color:var(--muted);margin-top:4px">' + JSON.stringify(log.d) + '</div>' : '') + '</div></div>').join('');
-}
-
-let sessionInterval = null, sessionExpiry = null;
-function startSession() { sessionExpiry = Date.now() + SESSION_TIMEOUT; updateSessionTimer(); if (sessionInterval) clearInterval(sessionInterval); sessionInterval = setInterval(() => { if (!sessionExpiry) return; if (Date.now() >= sessionExpiry) { clearInterval(sessionInterval); alert('⏰ انتهت مدة الجلسة. سيتم تسجيل الخروج.'); logout(); return; } updateSessionTimer(); }, 10000); }
-function refreshSession() { if (!sessionExpiry) return; sessionExpiry = Date.now() + SESSION_TIMEOUT; }
-function updateSessionTimer() {
-  const tEl = el('session-time-left'), tWrap = el('session-timer-display');
-  if (!tEl || !sessionExpiry) return;
-  const rem = Math.max(0, sessionExpiry - Date.now()), mins = Math.floor(rem / 60000), secs = Math.floor((rem % 60000) / 1000);
-  tEl.textContent = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
-  if (tWrap) tWrap.className = 'session-timer' + (mins < 3 ? ' warning' : '');
-}
-function stopSession() { if (sessionInterval) clearInterval(sessionInterval); sessionInterval = null; sessionExpiry = null; }
-
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden && (currentRole === 'admin' || currentRole === 'customer')) el('app-overlay').classList.add('show');
-  else el('app-overlay').classList.remove('show');
-});
-
-function checkPasswordStrength(pass) {
-  let s = 0;
-  if (pass.length >= 6) s++; if (pass.length >= 10) s++;
-  if (/[A-Za-z]/.test(pass)) s++; if (/[0-9]/.test(pass)) s++; if (/[^A-Za-z0-9]/.test(pass)) s++;
-  const lvl = ['','🔴 ضعيف جداً','🟠 ضعيف','🟡 متوسط','🟢 قوي','💪 قوي جداً'];
-  const clr = ['','var(--red)','var(--orange)','var(--orange)','var(--green)','var(--green)'];
-  return { score: s, label: lvl[s] || lvl[1], color: clr[s] || clr[1] };
-}
-function checkNewPassStrength() { const p = el('new-password')?.value || '', e2 = el('new-pass-strength'); if (!e2) return; if (!p) { e2.textContent=''; return; } const { label, color } = checkPasswordStrength(p); e2.innerHTML = '<span style="color:' + color + '">' + label + '</span>'; }
-
-document.addEventListener('DOMContentLoaded', () => {
-  const np = el('new-pass');
-  if (np) np.addEventListener('input', () => { const e2 = el('pass-strength'); if (!e2 || !np.value) { if(e2) e2.textContent=''; return; } const { label, color } = checkPasswordStrength(np.value); e2.innerHTML = '<span style="color:' + color + '">' + label + '</span>'; });
-});
-['click','keypress','touchstart'].forEach(evt => document.addEventListener(evt, () => { if (currentRole) refreshSession(); }, { passive: true }));
-
-// ==================== CORE ====================
-const ENCRYPTION_KEY = "S@yr4f4#M$st4qb4l!2025*XK9@zQ7!#&^mP3rVnL8wE";
-const STORE = 'bd_office_v1';
-const DEFAULT_ADMIN_USERNAME = 'admin';
-const DEFAULT_ADMIN_PASS = 'admin123';
-let ADMIN_HASH = CryptoJS.SHA256(DEFAULT_ADMIN_PASS).toString();
-let ADMIN_USERNAME = DEFAULT_ADMIN_USERNAME;
-
-function getDeviceId() { let d = localStorage.getItem('device_id'); if (!d) { d = 'dev_' + Date.now() + '_' + Math.random().toString(36); localStorage.setItem('device_id', d); } return d; }
-
-let DB, currentUser = null, currentRole = null, selectedDailyDate = new Date().toISOString().split('T')[0];
-let deferredPrompt, resetCustPhone = null, selectedCustomerForTx = null, editingTxId = null;
-let viewingCustomerPhone = null, dateRangeFilter = { from: '', to: '' }, editingCustomerPhone = null;
-
-function initDB() {
-  return {
-    customers: {},
-    transactions: [],
-    rates: { USD: 1450, EUR: 1550, IQD: 1 },
-    admin: { email: '', passwordHash: ADMIN_HASH, username: DEFAULT_ADMIN_USERNAME, deviceId: getDeviceId() },
-    dailyLedger: {},
-    officeFunds: { iqd: 0, usd: { amount: 0, rate: 1450 }, eur: { amount: 0, rate: 1550 }, bank: 0 }
-  };
-}
-
-function load() {
+// تحميل البيانات
+function loadData() {
   try {
-    const enc = localStorage.getItem(STORE);
-    if (enc) {
-      const bytes = CryptoJS.AES.decrypt(enc, ENCRYPTION_KEY);
-      const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      if (!data.admin) data.admin = { email: '', passwordHash: ADMIN_HASH, username: DEFAULT_ADMIN_USERNAME, deviceId: getDeviceId() };
-      if (!data.admin.username) data.admin.username = DEFAULT_ADMIN_USERNAME;
-      // نقطة ٦: تنظيف العملات - إبقاء 3 فقط
-      data.rates = { USD: data.rates?.USD || 1450, EUR: data.rates?.EUR || 1550, IQD: 1 };
-      for (const c of Object.values(data.customers || {})) {
-        if (c.balance) { const nb = {}; for (const cur of ['USD','EUR','IQD']) nb[cur] = c.balance[cur] || 0; c.balance = nb; }
-      }
-      if (!data.officeFunds) data.officeFunds = { iqd: 0, usd: { amount: 0, rate: 1450 }, eur: { amount: 0, rate: 1550 }, bank: 0 };
-      if (!data.officeFunds.eur) data.officeFunds.eur = { amount: 0, rate: 1550 };
-      return data;
+    const encrypted = localStorage.getItem('bd_office_v2');
+    if (encrypted) {
+      const bytes = CryptoJS.AES.decrypt(encrypted, ENCRYPTION_KEY);
+      DB = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     }
   } catch(e) {}
-  return initDB();
+  if (!DB) {
+    DB = {
+      customers: {},
+      transactions: [],
+      rates: DEFAULT_RATES,
+      admin: { username: 'admin', passwordHash: CryptoJS.SHA256('admin123').toString() },
+      dailyLedger: {},
+      inventory: { goldAmount: 0, goldPrice: DEFAULT_RATES.GOLD_PRICE }
+    };
+  }
+  if (!DB.inventory) DB.inventory = { goldAmount: 0, goldPrice: DEFAULT_RATES.GOLD_PRICE };
+  if (!DB.rates) DB.rates = DEFAULT_RATES;
+  saveData();
 }
 
-function save(d) { localStorage.setItem(STORE, CryptoJS.AES.encrypt(JSON.stringify(d), ENCRYPTION_KEY).toString()); }
-const fmtCache = new Map();
-function fmt(n) { if (n === 0) return '0'; if (fmtCache.has(n)) return fmtCache.get(n); const r = Number(n).toLocaleString('en-US', { maximumFractionDigits: 0 }); fmtCache.set(n, r); return r; }
-function el(id) { return document.getElementById(id); }
-function parseNumber(str) { return parseFloat(String(str).replace(/,/g, '')) || 0; }
-function formatNumberInput(inp) { let v = inp.value.replace(/[^0-9]/g, ''); if (v) inp.value = Number(v).toLocaleString('en-US'); }
-
-DB = load();
-ADMIN_HASH = DB.admin?.passwordHash || CryptoJS.SHA256(DEFAULT_ADMIN_PASS).toString();
-ADMIN_USERNAME = DB.admin?.username || DEFAULT_ADMIN_USERNAME;
-if (el('daily-date-picker')) el('daily-date-picker').value = selectedDailyDate;
-
-function loadOfficeFunds() {
-  const f = DB.officeFunds || { iqd: 0, usd: { amount: 0, rate: 1450 }, eur: { amount: 0, rate: 1550 }, bank: 0 };
-  el('office-iqd').value = fmt(f.iqd || 0);
-  el('office-usd-amount').value = fmt(f.usd?.amount || 0);
-  el('office-usd-rate').value = fmt(f.usd?.rate || 1450);
-  el('office-eur-amount').value = fmt(f.eur?.amount || 0);
-  el('office-eur-rate').value = fmt(f.eur?.rate || 1550);
-  el('bank-funds').value = fmt(f.bank || 0);
-  updateTotalOfficeFunds();
+function saveData() {
+  const encrypted = CryptoJS.AES.encrypt(JSON.stringify(DB), ENCRYPTION_KEY).toString();
+  localStorage.setItem('bd_office_v2', encrypted);
 }
 
-function updateTotalOfficeFunds() {
-  const iqd = parseNumber(el('office-iqd').value);
-  const usdAmt = parseNumber(el('office-usd-amount').value), usdRate = parseNumber(el('office-usd-rate').value);
-  const eurAmt = parseNumber(el('office-eur-amount').value), eurRate = parseNumber(el('office-eur-rate').value);
-  const bank = parseNumber(el('bank-funds').value);
-  el('office-iqd-value').textContent = fmt(iqd) + ' IQD';
-  el('office-usd-value').textContent = fmt(usdAmt * usdRate) + ' IQD';
-  el('office-eur-value').textContent = fmt(eurAmt * eurRate) + ' IQD';
-  el('bank-value').textContent = fmt(bank) + ' IQD';
-  el('total-office-funds').textContent = fmt(iqd + (usdAmt * usdRate) + (eurAmt * eurRate) + bank) + ' IQD';
+// دوال مساعدة
+function formatNumber(num) {
+  return Math.floor(Math.abs(num)).toLocaleString('en-US');
 }
 
-function saveOfficeFunds() {
-  DB.officeFunds = { iqd: parseNumber(el('office-iqd').value), usd: { amount: parseNumber(el('office-usd-amount').value), rate: parseNumber(el('office-usd-rate').value) }, eur: { amount: parseNumber(el('office-eur-amount').value), rate: parseNumber(el('office-eur-rate').value) }, bank: parseNumber(el('bank-funds').value) };
-  save(DB); alert('✅ تم الحفظ');
+function formatNumberInput(input) {
+  let val = input.value.replace(/[^0-9]/g, '');
+  if (val) input.value = parseInt(val).toLocaleString('en-US');
+  else input.value = '';
 }
 
-function updateDailyLedger() { if (!DB.dailyLedger[selectedDailyDate]) DB.dailyLedger[selectedDailyDate] = { openingBalance: calculateTotalBalance(), closingBalance: 0, profit: 0 }; }
-
-let totalBalanceCache = null;
-function calculateTotalBalance() {
-  if (totalBalanceCache !== null) return totalBalanceCache;
-  let total = 0;
-  Object.values(DB.customers).forEach(c => { Object.entries(c.balance).forEach(([cur, amt]) => { total += amt * (DB.rates[cur] || 1); }); });
-  totalBalanceCache = total;
-  return total;
+function parseNumber(str) {
+  return parseFloat(String(str).replace(/,/g, '')) || 0;
 }
 
-// نقطة ٥: تحديث وصل اليومية
-function updateDailyReceipt(todayTxs, currentBalance, opening, profit) {
+function showAlert(elementId, message, type) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.textContent = message;
+  el.className = 'alert ' + type;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function logActivity(action) {
+  const logs = JSON.parse(localStorage.getItem('bd_logs') || '[]');
+  logs.push({ action, time: new Date().toISOString() });
+  if (logs.length > 200) logs.shift();
+  localStorage.setItem('bd_logs', JSON.stringify(logs));
+}
+
+// ==================== تسجيل الدخول ====================
+function goToLogin() {
+  document.getElementById('screen-welcome').classList.remove('active');
+  document.getElementById('screen-login').classList.add('active');
+}
+
+function switchLoginTab(tab) {
+  const adminDiv = document.getElementById('login-admin');
+  const custDiv = document.getElementById('login-customer');
+  const btns = document.querySelectorAll('.toggle-btn');
+  btns.forEach(btn => btn.classList.remove('active'));
+  if (tab === 'admin') {
+    adminDiv.style.display = 'block';
+    custDiv.style.display = 'none';
+    btns[0].classList.add('active');
+  } else {
+    adminDiv.style.display = 'none';
+    custDiv.style.display = 'block';
+    btns[1].classList.add('active');
+  }
+}
+
+function loginAdmin() {
+  const username = document.getElementById('admin-username').value;
+  const password = document.getElementById('admin-pass').value;
+  const hash = CryptoJS.SHA256(password).toString();
+  
+  if (username === DB.admin.username && hash === DB.admin.passwordHash) {
+    currentRole = 'admin';
+    currentUser = { username, role: 'admin' };
+    renderAdminScreen();
+    logActivity('تسجيل دخول المدير');
+  } else {
+    showAlert('alert-login', '❌ اسم المستخدم أو كلمة السر غير صحيحة', 'error');
+  }
+}
+
+function loginCustomer() {
+  const phone = document.getElementById('cust-phone').value;
+  const password = document.getElementById('cust-pass').value;
+  const customer = DB.customers[phone];
+  
+  if (customer && customer.password === password) {
+    currentRole = 'customer';
+    currentUser = { phone, name: customer.fname + ' ' + customer.lname, role: 'customer' };
+    renderCustomerScreen();
+    logActivity('تسجيل دخول زبون: ' + customer.fname);
+  } else {
+    showAlert('alert-login', '❌ رقم الهاتف أو كلمة السر غير صحيحة', 'error');
+  }
+}
+
+function logout() {
+  currentRole = null;
+  currentUser = null;
+  document.getElementById('screen-admin').classList.remove('active');
+  document.getElementById('screen-customer').classList.remove('active');
+  document.getElementById('screen-login').classList.add('active');
+  logActivity('تسجيل خروج');
+}
+
+// ==================== شاشة المدير ====================
+function renderAdminScreen() {
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-admin').classList.add('active');
+  document.getElementById('dashboard-date').value = selectedDashboardDate;
+  renderDashboard();
+  renderCustomersList();
+  renderAllTransactions();
+  loadCustomerSelectForSearch();
+  loadCustomerSelectForTx();
+}
+
+function showTab(tabId) {
+  document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+  document.getElementById('panel-' + tabId).classList.add('active');
+  event.target.classList.add('active');
+  
+  if (tabId === 'dashboard') renderDashboard();
+  if (tabId === 'customers') renderCustomersList();
+  if (tabId === 'transactions') renderAllTransactions();
+}
+
+// ==================== فقرة 1: اليوميات ====================
+function renderDashboard() {
+  selectedDashboardDate = document.getElementById('dashboard-date').value;
+  
+  // حساب إجماليات العملات عندي
+  let totalIQD = 0, totalUSD = 0, totalEUR = 0;
+  let totalDebtsIQD = 0; // الديون عليّ (الزبائن اللي مدينون لي)
+  
+  Object.values(DB.customers).forEach(c => {
+    const balanceIQD = c.balance?.IQD || 0;
+    const balanceUSD = c.balance?.USD || 0;
+    const balanceEUR = c.balance?.EUR || 0;
+    
+    if (balanceIQD > 0) totalIQD += balanceIQD;
+    else totalDebtsIQD += Math.abs(balanceIQD);
+    
+    if (balanceUSD > 0) totalUSD += balanceUSD;
+    else totalDebtsIQD += Math.abs(balanceUSD) * (DB.rates.USD || 1450);
+    
+    if (balanceEUR > 0) totalEUR += balanceEUR;
+    else totalDebtsIQD += Math.abs(balanceEUR) * (DB.rates.EUR || 1550);
+  });
+  
+  document.getElementById('total-iqd-me').textContent = formatNumber(totalIQD) + ' IQD';
+  document.getElementById('total-usd-me').textContent = formatNumber(totalUSD) + ' USD';
+  document.getElementById('total-eur-me').textContent = formatNumber(totalEUR) + ' EUR';
+  document.getElementById('total-debts-me').textContent = formatNumber(totalDebtsIQD) + ' IQD';
+  
+  // فاتورة الجرد
+  const goldAmount = parseNumber(document.getElementById('gold-amount')?.value) || DB.inventory?.goldAmount || 0;
+  const goldPrice = parseNumber(document.getElementById('gold-price')?.value) || DB.inventory?.goldPrice || DB.rates.GOLD_PRICE || 350000;
+  
+  document.getElementById('gold-amount').value = formatNumber(goldAmount);
+  document.getElementById('gold-price').value = formatNumber(goldPrice);
+  
+  const goldTotal = goldAmount * goldPrice;
+  const usdTotalIQD = totalUSD * (DB.rates.USD || 1450);
+  const eurTotalIQD = totalEUR * (DB.rates.EUR || 1550);
+  const totalAssets = goldTotal + usdTotalIQD + eurTotalIQD + totalIQD;
+  
+  document.getElementById('gold-total').textContent = formatNumber(goldTotal) + ' IQD';
+  document.getElementById('usd-total-iqd').textContent = formatNumber(usdTotalIQD) + ' IQD';
+  document.getElementById('eur-total-iqd').textContent = formatNumber(eurTotalIQD) + ' IQD';
+  document.getElementById('iqd-total').textContent = formatNumber(totalIQD) + ' IQD';
+  document.getElementById('total-assets').textContent = formatNumber(totalAssets) + ' IQD';
+  
+  // حفظ الجرد
+  DB.inventory = { goldAmount, goldPrice };
+  DB.rates.GOLD_PRICE = goldPrice;
+  
+  // أرباح وخسائر اليوم
+  let currentBalance = totalIQD + usdTotalIQD + eurTotalIQD;
+  const opening = DB.dailyLedger[selectedDashboardDate]?.openingBalance || currentBalance;
+  const profit = currentBalance - opening;
+  
+  document.getElementById('opening-balance').textContent = formatNumber(opening) + ' IQD';
+  document.getElementById('current-balance').textContent = formatNumber(currentBalance) + ' IQD';
+  
+  const profitEl = document.getElementById('profit-loss');
+  profitEl.textContent = (profit >= 0 ? '+' : '') + formatNumber(Math.abs(profit)) + ' IQD';
+  profitEl.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
+  
+  if (!DB.dailyLedger[selectedDashboardDate]) {
+    DB.dailyLedger[selectedDashboardDate] = { openingBalance: currentBalance, closingBalance: currentBalance, profit: 0 };
+  } else {
+    DB.dailyLedger[selectedDashboardDate].closingBalance = currentBalance;
+    DB.dailyLedger[selectedDashboardDate].profit = profit;
+  }
+  saveData();
+  
+  // حركات اليوم
+  const todayTxs = DB.transactions.filter(tx => tx.date === selectedDashboardDate).reverse();
+  const container = document.getElementById('daily-transactions-list');
+  if (!todayTxs.length) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">💸</div>لا توجد حركات في هذا اليوم</div>';
+  } else {
+    container.innerHTML = todayTxs.map(tx => `
+      <div class="tx-item">
+        <div class="tx-icon ${tx.type}">${tx.type === 'deposit' ? '⬆️' : '⬇️'}</div>
+        <div class="tx-details">
+          <div class="tx-name">${tx.customerName}</div>
+          <div class="tx-date">${tx.time || tx.date}</div>
+        </div>
+        <div class="tx-amount ${tx.type}">${tx.type === 'deposit' ? '+' : '-'}${formatNumber(tx.amount)} ${tx.currency}</div>
+      </div>
+    `).join('');
+  }
+}
+
+function updateInvoiceTotal() {
+  const goldAmount = parseNumber(document.getElementById('gold-amount').value);
+  const goldPrice = parseNumber(document.getElementById('gold-price').value);
+  const goldTotal = goldAmount * goldPrice;
+  document.getElementById('gold-total').textContent = formatNumber(goldTotal) + ' IQD';
+  
+  const totalIQD = parseNumber(document.getElementById('total-iqd-me').textContent);
+  const usdTotal = parseNumber(document.getElementById('total-usd-me').textContent) * (DB.rates.USD || 1450);
+  const eurTotal = parseNumber(document.getElementById('total-eur-me').textContent) * (DB.rates.EUR || 1550);
+  const totalAssets = goldTotal + usdTotal + eurTotal + totalIQD;
+  document.getElementById('total-assets').textContent = formatNumber(totalAssets) + ' IQD';
+}
+
+// ==================== فقرة 2: الزبائن ====================
+function renderCustomersList() {
+  const search = document.getElementById('search-customers')?.value.toLowerCase() || '';
+  const customers = Object.values(DB.customers);
+  const filtered = customers.filter(c => (c.fname + ' ' + c.lname + c.phone).toLowerCase().includes(search));
+  
+  const container = document.getElementById('customers-list-container');
+  if (!filtered.length) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">👥</div>لا توجد زبائن</div>';
+    return;
+  }
+  
+  container.innerHTML = filtered.map(c => {
+    const iqd = c.balance?.IQD || 0;
+    const usd = c.balance?.USD || 0;
+    const eur = c.balance?.EUR || 0;
+    let debtClass = '';
+    if (iqd < 0 || usd < 0 || eur < 0) debtClass = 'has-debt';
+    else if (iqd > 0 || usd > 0 || eur > 0) debtClass = 'has-credit';
+    
+    return `
+      <div class="customer-card ${debtClass}">
+        <div class="cust-name">${c.fname} ${c.lname}</div>
+        <div class="cust-info">📞 ${c.phone} | 🆔 ${c.id_no || '—'}</div>
+        <div class="cust-balances">
+          ${iqd !== 0 ? `<span class="bal-badge ${iqd > 0 ? 'pos' : 'neg'}">🇮🇶 ${iqd > 0 ? '+' : ''}${formatNumber(iqd)} IQD</span>` : ''}
+          ${usd !== 0 ? `<span class="bal-badge ${usd > 0 ? 'pos' : 'neg'}">💵 ${usd > 0 ? '+' : ''}${formatNumber(usd)} USD</span>` : ''}
+          ${eur !== 0 ? `<span class="bal-badge ${eur > 0 ? 'pos' : 'neg'}">💶 ${eur > 0 ? '+' : ''}${formatNumber(eur)} EUR</span>` : ''}
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn-edit" onclick="openTxForCustomer('${c.phone}')">💰 معاملة</button>
+          <button class="btn-edit" onclick="editCustomer('${c.phone}')">✏️ تعديل</button>
+          <button class="btn-delete" onclick="deleteCustomer('${c.phone}')">🗑️ حذف</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openAddCustomerModal() {
+  document.getElementById('customer-modal-title').textContent = '➕ إضافة زبون';
+  document.getElementById('edit-customer-phone').value = '';
+  document.getElementById('cust-fname').value = '';
+  document.getElementById('cust-lname').value = '';
+  document.getElementById('cust-phone-input').value = '';
+  document.getElementById('cust-id').value = '';
+  document.getElementById('cust-password').value = '';
+  document.getElementById('modal-customer').classList.add('show');
+}
+
+function editCustomer(phone) {
+  const c = DB.customers[phone];
+  if (!c) return;
+  document.getElementById('customer-modal-title').textContent = '✏️ تعديل زبون';
+  document.getElementById('edit-customer-phone').value = phone;
+  document.getElementById('cust-fname').value = c.fname;
+  document.getElementById('cust-lname').value = c.lname;
+  document.getElementById('cust-phone-input').value = c.phone;
+  document.getElementById('cust-id').value = c.id_no || '';
+  document.getElementById('cust-password').value = '';
+  document.getElementById('modal-customer').classList.add('show');
+}
+
+function saveCustomer() {
+  const oldPhone = document.getElementById('edit-customer-phone').value;
+  const fname = document.getElementById('cust-fname').value;
+  const lname = document.getElementById('cust-lname').value;
+  const phone = document.getElementById('cust-phone-input').value;
+  const id_no = document.getElementById('cust-id').value;
+  const password = document.getElementById('cust-password').value;
+  
+  if (!fname || !lname || !phone) {
+    showAlert('customer-modal-alert', '❌ الاسم والهاتف مطلوبين', 'error');
+    return;
+  }
+  
+  if (!oldPhone && DB.customers[phone]) {
+    showAlert('customer-modal-alert', '❌ هذا الرقم موجود مسبقاً', 'error');
+    return;
+  }
+  
+  const customerData = {
+    fname, lname, phone, id_no,
+    balance: oldPhone ? (DB.customers[oldPhone]?.balance || { IQD: 0, USD: 0, EUR: 0 }) : { IQD: 0, USD: 0, EUR: 0 },
+    password: password || (oldPhone ? DB.customers[oldPhone]?.password : '1234')
+  };
+  
+  if (oldPhone && oldPhone !== phone) {
+    delete DB.customers[oldPhone];
+    DB.transactions.forEach(tx => { if (tx.phone === oldPhone) tx.phone = phone; });
+  }
+  
+  DB.customers[phone] = customerData;
+  saveData();
+  closeCustomerModal();
+  renderCustomersList();
+  loadCustomerSelectForSearch();
+  loadCustomerSelectForTx();
+  showAlert('customer-modal-alert', '✅ تم حفظ الزبون', 'success');
+}
+
+function deleteCustomer(phone) {
+  if (!confirm('هل أنت متأكد من حذف هذا الزبون؟')) return;
+  delete DB.customers[phone];
+  DB.transactions = DB.transactions.filter(tx => tx.phone !== phone);
+  saveData();
+  renderCustomersList();
+  loadCustomerSelectForSearch();
+  loadCustomerSelectForTx();
+}
+
+function closeCustomerModal() {
+  document.getElementById('modal-customer').classList.remove('show');
+}
+
+// ==================== فقرة 3: الحركات ====================
+function loadCustomerSelectForTx() {
+  const select = document.getElementById('tx-customer-select');
+  if (!select) return;
+  select.innerHTML = '<option value="">اختر زبون</option>' + 
+    Object.values(DB.customers).map(c => `<option value="${c.phone}">${c.fname} ${c.lname} (${c.phone})</option>`).join('');
+}
+
+function openTxModal() {
+  loadCustomerSelectForTx();
+  document.getElementById('tx-amount-input').value = '';
+  document.getElementById('tx-note-input').value = '';
+  document.getElementById('tx-type-select').value = 'deposit';
+  document.getElementById('tx-currency-select').value = 'IQD';
+  document.getElementById('modal-transaction').classList.add('show');
+}
+
+function openTxForCustomer(phone) {
+  loadCustomerSelectForTx();
+  document.getElementById('tx-customer-select').value = phone;
+  document.getElementById('tx-amount-input').value = '';
+  document.getElementById('tx-note-input').value = '';
+  document.getElementById('modal-transaction').classList.add('show');
+}
+
+function closeTxModal() {
+  document.getElementById('modal-transaction').classList.remove('show');
+}
+
+function confirmTransaction() {
+  const phone = document.getElementById('tx-customer-select').value;
+  const type = document.getElementById('tx-type-select').value;
+  const amount = parseNumber(document.getElementById('tx-amount-input').value);
+  const currency = document.getElementById('tx-currency-select').value;
+  const note = document.getElementById('tx-note-input').value;
+  
+  if (!phone) {
+    showAlert('tx-modal-alert', '❌ اختر زبون', 'error');
+    return;
+  }
+  if (!amount || amount <= 0) {
+    showAlert('tx-modal-alert', '❌ المبلغ غير صحيح', 'error');
+    return;
+  }
+  
+  const customer = DB.customers[phone];
+  if (!customer) return;
+  
+  if (!customer.balance) customer.balance = { IQD: 0, USD: 0, EUR: 0 };
+  if (!customer.balance[currency]) customer.balance[currency] = 0;
+  
+  // الزبون يقدر يسحب حتى لو رصيده صفر (يصير مدين)
+  if (type === 'deposit') {
+    customer.balance[currency] += amount;
+  } else {
+    customer.balance[currency] -= amount;
+  }
+  
   const now = new Date();
-  el('receipt-date-display').textContent = selectedDailyDate + ' — ' + now.toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' });
-  el('r-opening').textContent = fmt(opening) + ' IQD';
-  el('r-current').textContent = fmt(currentBalance) + ' IQD';
+  const tx = {
+    id: Date.now() + Math.random().toString(36),
+    phone: phone,
+    customerName: customer.fname + ' ' + customer.lname,
+    type: type,
+    amount: amount,
+    currency: currency,
+    note: note,
+    date: selectedDashboardDate,
+    time: now.toLocaleTimeString('ar-IQ')
+  };
+  
+  DB.transactions.push(tx);
+  
+  // تحديث الديلي ليدجر
+  let totalBalance = 0;
+  Object.values(DB.customers).forEach(c => {
+    totalBalance += (c.balance?.IQD || 0);
+    totalBalance += (c.balance?.USD || 0) * (DB.rates.USD || 1450);
+    totalBalance += (c.balance?.EUR || 0) * (DB.rates.EUR || 1550);
+  });
+  
+  if (!DB.dailyLedger[selectedDashboardDate]) {
+    DB.dailyLedger[selectedDashboardDate] = { openingBalance: totalBalance };
+  }
+  
+  saveData();
+  closeTxModal();
+  renderDashboard();
+  renderCustomersList();
+  renderAllTransactions();
+  showAlert('tx-modal-alert', '✅ تمت المعاملة بنجاح', 'success');
+  logActivity('معاملة: ' + type + ' ' + amount + ' ' + currency + ' لـ ' + customer.fname);
+}
+
+function renderAllTransactions() {
+  const filter = document.getElementById('tx-filter')?.value || 'all';
+  let transactions = [...DB.transactions].reverse();
+  
+  if (filter === 'debt') {
+    transactions = transactions.filter(tx => {
+      const c = DB.customers[tx.phone];
+      const balance = c?.balance?.[tx.currency] || 0;
+      return balance < 0;
+    });
+  } else if (filter === 'credit') {
+    transactions = transactions.filter(tx => {
+      const c = DB.customers[tx.phone];
+      const balance = c?.balance?.[tx.currency] || 0;
+      return balance > 0;
+    });
+  }
+  
+  const container = document.getElementById('all-transactions-list');
+  if (!transactions.length) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">💸</div>لا توجد حركات</div>';
+    return;
+  }
+  
+  container.innerHTML = transactions.map(tx => `
+    <div class="tx-item">
+      <div class="tx-icon ${tx.type}">${tx.type === 'deposit' ? '⬆️' : '⬇️'}</div>
+      <div class="tx-details">
+        <div class="tx-name">${tx.customerName}</div>
+        <div class="tx-date">${tx.date} ${tx.time || ''}</div>
+        <div class="tx-note" style="font-size:11px;color:var(--muted)">${tx.note || '—'}</div>
+      </div>
+      <div class="tx-amount ${tx.type}">${tx.type === 'deposit' ? '+' : '-'}${formatNumber(tx.amount)} ${tx.currency}</div>
+    </div>
+  `).join('');
+}
+
+// ==================== فقرة 4: البحث ====================
+function loadCustomerSelectForSearch() {
+  const select = document.getElementById('search-customer-select');
+  if (!select) return;
+  select.innerHTML = '<option value="">-- اختر زبون --</option>' + 
+    Object.values(DB.customers).map(c => `<option value="${c.phone}">${c.fname} ${c.lname} (${c.phone})</option>`).join('');
+}
+
+function loadCustomerForSearch() {
+  const phone = document.getElementById('search-customer-select').value;
+  if (phone) {
+    const c = DB.customers[phone];
+    document.getElementById('search-from-date').value = '';
+    document.getElementById('search-to-date').value = '';
+  }
+}
+
+function searchCustomerTransactions() {
+  const phone = document.getElementById('search-customer-select').value;
+  const fromDate = document.getElementById('search-from-date').value;
+  const toDate = document.getElementById('search-to-date').value;
+  
+  if (!phone) {
+    showAlert('alert-login', '❌ اختر زبون', 'error');
+    return;
+  }
+  
+  const customer = DB.customers[phone];
+  if (!customer) return;
+  
+  let txs = DB.transactions.filter(tx => tx.phone === phone);
+  
+  if (fromDate) txs = txs.filter(tx => tx.date >= fromDate);
+  if (toDate) txs = txs.filter(tx => tx.date <= toDate);
+  
+  txs = txs.reverse();
+  
+  const container = document.getElementById('search-results');
+  if (!txs.length) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div>لا توجد حركات في هذه الفترة</div>';
+    return;
+  }
+  
+  // حساب إجماليات
   let totalIn = 0, totalOut = 0;
-  todayTxs.forEach(tx => { const rate = DB.rates[tx.currency] || 1; if (tx.type === 'deposit') totalIn += tx.amount * rate; else totalOut += tx.amount * rate; });
-  el('r-total-in').textContent = '+' + fmt(totalIn) + ' IQD';
-  el('r-total-out').textContent = '-' + fmt(totalOut) + ' IQD';
-  el('r-count').textContent = todayTxs.length + ' حركة';
-  const pEl = el('r-profit');
-  pEl.textContent = (profit >= 0 ? '+' : '') + fmt(profit) + ' IQD';
-  pEl.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
+  txs.forEach(tx => {
+    const rate = DB.rates[tx.currency] || 1;
+    if (tx.type === 'deposit') totalIn += tx.amount * rate;
+    else totalOut += tx.amount * rate;
+  });
+  
+  container.innerHTML = `
+    <div class="invoice-card">
+      <div class="invoice-title">📊 ملخص حركات ${customer.fname} ${customer.lname}</div>
+      <div class="invoice-row"><span class="invoice-label">📅 الفترة</span><span class="invoice-value">${fromDate || 'البداية'} → ${toDate || 'اليوم'}</span></div>
+      <div class="invoice-row"><span class="invoice-label">⬆️ مجموع الإيداع</span><span class="invoice-value" style="color:var(--green)">+${formatNumber(totalIn)} IQD</span></div>
+      <div class="invoice-row"><span class="invoice-label">⬇️ مجموع السحب</span><span class="invoice-value" style="color:var(--red)">-${formatNumber(totalOut)} IQD</span></div>
+      <div class="invoice-row"><span class="invoice-label">📈 الصافي</span><span class="invoice-value" style="color:${totalIn - totalOut >= 0 ? 'var(--green)' : 'var(--red)'}">${totalIn - totalOut >= 0 ? '+' : ''}${formatNumber(Math.abs(totalIn - totalOut))} IQD</span></div>
+    </div>
+    <div class="section-title">📋 التفاصيل</div>
+    ${txs.map(tx => `
+      <div class="tx-item">
+        <div class="tx-icon ${tx.type}">${tx.type === 'deposit' ? '⬆️' : '⬇️'}</div>
+        <div class="tx-details">
+          <div class="tx-name">${tx.type === 'deposit' ? 'إيداع' : 'سحب'}</div>
+          <div class="tx-date">${tx.date} ${tx.time || ''}</div>
+          <div class="tx-note">${tx.note || '—'}</div>
+        </div>
+        <div class="tx-amount ${tx.type}">${tx.type === 'deposit' ? '+' : '-'}${formatNumber(tx.amount)} ${tx.currency}</div>
+      </div>
+    `).join('')}
+  `;
 }
 
-// نقطة ٥: طباعة وصل اليوم
-function printDailyReceipt() {
-  const todayTxs = DB.transactions.filter(tx => tx.date.startsWith(selectedDailyDate.split('-').reverse().join('/')));
-  let totalIn = 0, totalOut = 0;
-  todayTxs.forEach(tx => { const r = DB.rates[tx.currency] || 1; if (tx.type === 'deposit') totalIn += tx.amount * r; else totalOut += tx.amount * r; });
-  const opening = DB.dailyLedger[selectedDailyDate]?.openingBalance || 0;
-  const current = calculateTotalBalance();
-  const profit = current - opening;
-  const txRows = [...todayTxs].reverse().map(tx => '<tr><td>' + tx.customerName + '</td><td>' + (tx.type === 'deposit' ? 'إيداع' : 'سحب') + '</td><td style="direction:ltr">' + (tx.type === 'deposit' ? '+' : '-') + fmt(tx.amount) + ' ' + tx.currency + '</td><td>' + (tx.note || '—') + '</td><td style="direction:ltr;font-size:11px">' + tx.date + '</td></tr>').join('');
-  const w = window.open('', '_blank');
-  w.document.write('<!DOCTYPE html><html dir="rtl"><head><title>وصل يومية BD Office</title><style>body{font-family:Arial,sans-serif;padding:20px;color:#333}.box{border:2px dashed #C9A84C;padding:20px;max-width:700px;margin:auto}h2{color:#C9A84C;text-align:center}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #ddd;padding:8px;text-align:right;font-size:13px}th{background:#f5f5f5}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee}.label{color:#888}.val{font-weight:bold}.footer{text-align:center;margin-top:20px;color:#888;font-size:12px}</style></head><body onload="window.print();window.close()"><div class="box"><h2>🏦 BD Office</h2><p style="text-align:center;color:#888">' + selectedDailyDate + '</p><div class="row"><span class="label">الرصيد الافتتاحي</span><span class="val">' + fmt(opening) + ' IQD</span></div><div class="row"><span class="label">الرصيد الحالي</span><span class="val">' + fmt(current) + ' IQD</span></div><div class="row"><span class="label">مجموع الإيداع</span><span class="val" style="color:green">+' + fmt(totalIn) + ' IQD</span></div><div class="row"><span class="label">مجموع السحب</span><span class="val" style="color:red">-' + fmt(totalOut) + ' IQD</span></div><div class="row"><span class="label">عدد الحركات</span><span class="val">' + todayTxs.length + '</span></div><div class="row"><span class="label">صافي اليوم</span><span class="val" style="color:' + (profit >= 0 ? 'green' : 'red') + '">' + (profit >= 0 ? '+' : '') + fmt(profit) + ' IQD</span></div><table><thead><tr><th>الزبون</th><th>النوع</th><th>المبلغ</th><th>ملاحظة</th><th>الوقت</th></tr></thead><tbody>' + (txRows || '<tr><td colspan="5" style="text-align:center;color:#888">لا توجد حركات</td></tr>') + '</tbody></table><div class="footer">BD Office — كل الحقوق محفوظة</div></div></body></html>');
-  w.document.close();
+// ==================== شاشة الزبون ====================
+function renderCustomerScreen() {
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-customer').classList.add('active');
+  document.getElementById('cust-welcome-label').textContent = 'مرحباً ' + currentUser.name;
+  
+  const customer = DB.customers[currentUser.phone];
+  if (!customer) return;
+  
+  const balances = customer.balance || { IQD: 0, USD: 0, EUR: 0 };
+  document.getElementById('cust-balances-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-label">🇮🇶 دينار عراقي</div><div class="stat-value ${balances.IQD >= 0 ? 'pos' : 'neg'}">${balances.IQD >= 0 ? '+' : ''}${formatNumber(balances.IQD)} IQD</div></div>
+    <div class="stat-card"><div class="stat-label">💵 دولار أمريكي</div><div class="stat-value ${balances.USD >= 0 ? 'pos' : 'neg'}">${balances.USD >= 0 ? '+' : ''}${formatNumber(balances.USD)} USD</div></div>
+    <div class="stat-card"><div class="stat-label">💶 يورو</div><div class="stat-value ${balances.EUR >= 0 ? 'pos' : 'neg'}">${balances.EUR >= 0 ? '+' : ''}${formatNumber(balances.EUR)} EUR</div></div>
+  `;
+  
+  const txs = DB.transactions.filter(tx => tx.phone === currentUser.phone).reverse();
+  const container = document.getElementById('cust-transactions-list');
+  if (!txs.length) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">💸</div>لا توجد حركات</div>';
+    return;
+  }
+  
+  container.innerHTML = txs.map(tx => `
+    <div class="tx-item">
+      <div class="tx-icon ${tx.type}">${tx.type === 'deposit' ? '⬆️' : '⬇️'}</div>
+      <div class="tx-details">
+        <div class="tx-name">${tx.type === 'deposit' ? 'إيداع' : 'سحب'}</div>
+        <div class="tx-date">${tx.date}</div>
+      </div>
+      <div class="tx-amount ${tx.type}">${tx.type === 'deposit' ? '+' : '-'}${formatNumber(tx.amount)} ${tx.currency}</div>
+    </div>
+  `).join('');
 }
 
-// نقطة ٤: طباعة كشف حساب الزبون
-function printCustomerStatement() {
-  if (!viewingCustomerPhone) return;
-  const c = DB.customers[viewingCustomerPhone];
-  const txs = DB.transactions.filter(tx => tx.phone === viewingCustomerPhone).reverse();
-  const balRows = Object.entries(c.balance).map(([cur, amt]) => '<span style="display:inline-block;margin:4px;padding:8px 16px;border-radius:20px;background:' + (amt < 0 ? '#ffe8e8' : amt > 0 ? '#e8fff0' : '#f5f5f5') + ';color:' + (amt < 0 ? 'red' : amt > 0 ? 'green' : '#333') + ';font-weight:bold;direction:ltr">' + (amt < 0 ? '-' : '') + fmt(Math.abs(amt)) + ' ' + cur + '</span>').join('');
-  const txRows = txs.map(tx => '<tr><td style="direction:ltr;font-size:11px">' + tx.date + '</td><td>' + (tx.type === 'deposit' ? '⬆️ إيداع' : '⬇️ سحب') + '</td><td style="direction:ltr;color:' + (tx.type === 'deposit' ? 'green' : 'red') + '">' + (tx.type === 'deposit' ? '+' : '-') + fmt(tx.amount) + ' ' + tx.currency + '</td><td>' + (tx.note || '—') + '</td></tr>').join('');
-  const w = window.open('', '_blank');
-  w.document.write('<!DOCTYPE html><html dir="rtl"><head><title>كشف حساب ' + c.fname + ' ' + c.lname + '</title><style>body{font-family:Arial,sans-serif;padding:20px;color:#333}.box{border:2px dashed #C9A84C;padding:20px;max-width:700px;margin:auto}h2{color:#C9A84C;text-align:center}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #ddd;padding:8px;text-align:right;font-size:13px}th{background:#f5f5f5}.footer{text-align:center;margin-top:20px;color:#888;font-size:12px}</style></head><body onload="window.print();window.close()"><div class="box"><h2>🏦 BD Office</h2><h3 style="text-align:center">' + c.fname + ' ' + c.lname + '</h3><p style="text-align:center;color:#888">' + c.phone + ' | رقم الهوية: ' + c.id_no + '</p><p style="text-align:center;color:#888">تاريخ الطباعة: ' + new Date().toLocaleDateString('ar-IQ') + '</p><div style="text-align:center;margin:12px 0"><strong>الأرصدة الحالية:</strong><br/>' + balRows + '</div><table><thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>ملاحظة</th></tr></thead><tbody>' + (txRows || '<tr><td colspan="4" style="text-align:center;color:#888">لا توجد حركات</td></tr>') + '</tbody></table><div class="footer">BD Office — كل الحقوق محفوظة</div></div></body></html>');
-  w.document.close();
+// ==================== الإعدادات ====================
+function showAdminProfileModal() {
+  document.getElementById('admin-new-username').value = DB.admin.username;
+  document.getElementById('admin-current-pass').value = '';
+  document.getElementById('admin-new-pass').value = '';
+  document.getElementById('admin-confirm-pass').value = '';
+  document.getElementById('modal-admin-profile').classList.add('show');
 }
 
-function renderDailySummary() {
-  totalBalanceCache = null; updateDailyLedger();
-  const daily = DB.dailyLedger[selectedDailyDate] || { openingBalance: 0, closingBalance: 0, profit: 0 };
-  const currentBalance = calculateTotalBalance(), profit = currentBalance - daily.openingBalance;
-  daily.closingBalance = currentBalance; daily.profit = profit; save(DB);
-  el('daily-date-title').textContent = '📊 ' + selectedDailyDate;
-  if (el('daily-date-picker')) el('daily-date-picker').value = selectedDailyDate;
-  el('opening-balance').textContent = fmt(daily.openingBalance) + ' IQD';
-  el('current-balance').textContent = fmt(currentBalance) + ' IQD';
-  const pEl = el('profit-value'); pEl.textContent = (profit >= 0 ? '+' : '') + fmt(profit) + ' IQD'; pEl.className = 'daily-value ' + (profit >= 0 ? 'profit' : 'loss');
-  const todayTxs = DB.transactions.filter(tx => tx.date.startsWith(selectedDailyDate.split('-').reverse().join('/')));
-  updateDailyReceipt(todayTxs, currentBalance, daily.openingBalance, profit);
-  renderDailyTransactions(); loadOfficeFunds();
+function closeAdminProfileModal() {
+  document.getElementById('modal-admin-profile').classList.remove('show');
 }
 
-function renderDailyTransactions() {
-  const todayTxs = DB.transactions.filter(tx => tx.date.startsWith(selectedDailyDate.split('-').reverse().join('/'))).reverse();
-  const container = el('daily-transactions');
-  if (!todayTxs.length) { container.innerHTML = '<div class="empty"><div class="empty-icon">💸</div>لا توجد حركات في هذا التاريخ</div>'; return; }
-  container.innerHTML = todayTxs.map(tx => renderTxItem(tx)).join('');
+function updateAdminProfile() {
+  const newUsername = document.getElementById('admin-new-username').value;
+  const currentPass = document.getElementById('admin-current-pass').value;
+  const newPass = document.getElementById('admin-new-pass').value;
+  const confirmPass = document.getElementById('admin-confirm-pass').value;
+  
+  if (currentPass) {
+    const currentHash = CryptoJS.SHA256(currentPass).toString();
+    if (currentHash !== DB.admin.passwordHash) {
+      showAlert('profile-alert', '❌ كلمة السر الحالية غير صحيحة', 'error');
+      return;
+    }
+  }
+  
+  if (newPass && newPass !== confirmPass) {
+    showAlert('profile-alert', '❌ كلمة السر غير متطابقة', 'error');
+    return;
+  }
+  
+  DB.admin.username = newUsername;
+  if (newPass) DB.admin.passwordHash = CryptoJS.SHA256(newPass).toString();
+  saveData();
+  showAlert('profile-alert', '✅ تم تحديث الملف الشخصي', 'success');
+  setTimeout(() => closeAdminProfileModal(), 1500);
 }
 
-function renderTxItem(tx) {
-  const typeLabel = tx.type === 'deposit' ? 'إيداع' : 'سحب';
-  const printBtn = currentRole === 'admin' ? '<button class="btn-edit" onclick="printReceipt(\'' + tx.id + '\')" style="background:rgba(201,168,76,0.1);border-color:var(--gold);color:var(--gold)">🖨️ وصل</button>' : '';
-  const adminBtns = currentRole === 'admin' ? '<div class="tx-actions"><button class="btn-edit" onclick="editTransaction(\'' + tx.id + '\')">✏️</button><button class="btn-delete" onclick="deleteTransaction(\'' + tx.id + '\')">🗑️</button>' + printBtn + '</div>' : '';
-  return '<div class="tx-item"><div class="tx-icon ' + tx.type + '">' + (tx.type === 'deposit' ? '⬆️' : '⬇️') + '</div><div class="tx-details"><div class="tx-name">' + tx.customerName + ' - ' + typeLabel + '</div><div class="tx-note">' + (tx.note || '—') + '</div><div class="tx-date">' + tx.date + '</div>' + adminBtns + '</div><div class="tx-amount ' + tx.type + '">' + (tx.type === 'deposit' ? '+' : '-') + fmt(tx.amount) + ' ' + tx.currency + '</div></div>';
+function exportBackup() {
+  const dataStr = JSON.stringify(DB);
+  const blob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `bd_office_backup_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showAlert('profile-alert', '✅ تم تصدير النسخة الاحتياطية', 'success');
 }
 
-function printReceipt(txId) {
-  const tx = DB.transactions.find(t => t.id === txId); if (!tx) return;
-  const w = window.open('', '_blank');
-  w.document.write('<!DOCTYPE html><html dir="rtl"><head><title>وصل BD Office</title><style>body{font-family:Arial,sans-serif;padding:20px;text-align:center;color:#333}.box{border:2px dashed #C9A84C;padding:15px;width:320px;margin:auto}h3{color:#C9A84C}.divider{border-top:1px dashed #000;margin:10px 0}.row{display:flex;justify-content:space-between;margin:5px 0;font-size:14px}.footer{font-size:12px;margin-top:20px;color:#888}</style></head><body onload="window.print();window.close()"><div class="box"><h3>🏦 BD Office</h3><div class="divider"></div><div class="row"><span>التاريخ:</span><span>' + tx.date + '</span></div><div class="row"><span>الزبون:</span><span>' + tx.customerName + '</span></div><div class="row"><span>النوع:</span><span>' + (tx.type === 'deposit' ? 'إيداع' : 'سحب') + '</span></div><div class="divider"></div><div style="font-size:26px;font-weight:bold;margin:10px 0;color:' + (tx.type === 'deposit' ? 'green' : 'red') + '">' + (tx.type === 'deposit' ? '+' : '-') + fmt(tx.amount) + ' ' + tx.currency + '</div><div class="row"><span>ملاحظات:</span><span>' + (tx.note || '—') + '</span></div><div class="divider"></div><div class="footer">شكراً لتعاملكم مع BD Office</div></div></body></html>');
-  w.document.close();
+function resetAllData() {
+  if (!confirm('⚠️ تحذير! هذا سيمسح جميع البيانات نهائياً. هل أنت متأكد؟')) return;
+  localStorage.clear();
+  location.reload();
 }
 
-function changeDailyDateFromPicker() { selectedDailyDate = el('daily-date-picker').value; totalBalanceCache = null; renderDailySummary(); updateShortcutsActive(); }
-function setDailyDateShortcut(type) {
-  const today = new Date(); let t = new Date();
-  if (type === 'yesterday') t.setDate(today.getDate() - 1);
-  else if (type === 'monthStart') t = new Date(today.getFullYear(), today.getMonth(), 1);
-  else if (type === 'monthEnd') t = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  selectedDailyDate = t.toISOString().split('T')[0]; totalBalanceCache = null; renderDailySummary(); updateShortcutsActive();
+function showInstallInstructions() {
+  document.getElementById('modal-install').classList.add('show');
 }
-function updateShortcutsActive() {
-  const today = new Date().toISOString().split('T')[0], yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-  const ms = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
-  const me = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toI
+
+function closeInstallModal() {
+  document.getElementById('modal-install').classList.remove('show');
+}
+
+// ==================== تحميل التطبيق ====================
+loadData();
+setTimeout(() => {
+  const splash = document.getElementById('splash');
+  splash.style.opacity = '0';
+  setTimeout(() => {
+    splash.style.display = 'none';
+    document.getElementById('screen-welcome').classList.add('active');
+  }, 600);
+}, 2000);
+</script>
+
+</body>
+</html>
+</html>
